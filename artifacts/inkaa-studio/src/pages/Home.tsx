@@ -13,6 +13,7 @@ import { SiInstagram, SiX, SiFigma, SiFramer, SiGithub, SiOpenai, SiGsap } from 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CustomCursor from "@/components/CustomCursor";
+import GSAPPageEffects from "@/components/GSAPPageEffects";
 import GSAPScrollScene from "@/components/GSAPScrollScene";
 import MarqueeStrip from "@/components/MarqueeStrip";
 import BookCallButton from "@/components/BookCallButton";
@@ -513,6 +514,7 @@ export default function Home() {
 
   return (
     <div className="w-full min-h-[100dvh] bg-background text-foreground overflow-x-hidden selection:bg-primary selection:text-white font-sans">
+      <GSAPPageEffects />
       <CustomCursor />
       <BookCallButton />
 
@@ -585,6 +587,7 @@ export default function Home() {
 
       {/* ── 2. Hero ── */}
       <section
+        id="hero"
         ref={heroRef}
         className="relative min-h-[100dvh] flex items-center justify-center pt-24 pb-0 px-6 overflow-hidden bg-[#f2f2f2]"
       >
@@ -740,7 +743,9 @@ export default function Home() {
       </section>
 
       {/* ── Marquee ── */}
-      <MarqueeStrip dark />
+      <div className="marquee-3d">
+        <MarqueeStrip dark />
+      </div>
 
       {/* ── 3. About ── */}
       <motion.section
@@ -814,7 +819,7 @@ export default function Home() {
           </div>
 
           {/* Image — clip-path reveal from bottom */}
-          <div ref={aboutImageRef} className="relative aspect-[3/4] rounded-2xl overflow-hidden lg:order-1">
+          <div ref={aboutImageRef} className="about-img-3d relative aspect-[3/4] rounded-2xl overflow-hidden lg:order-1">
             <motion.div
               className="absolute inset-0 overflow-hidden rounded-2xl"
               style={{ clipPath: aboutClip }}
@@ -831,7 +836,7 @@ export default function Home() {
       </motion.section>
 
       {/* ── Marquee ── */}
-      <MarqueeStrip />
+      <div className="marquee-3d"><MarqueeStrip /></div>
 
       {/* ── 4. Services — 3D Fan Carousel ── */}
       <motion.section
@@ -1095,7 +1100,7 @@ export default function Home() {
 
         {/* Scattered bento row */}
         <div className="px-6 md:px-12 overflow-x-auto pb-2">
-          <div className="flex items-end gap-3 min-w-max md:min-w-0">
+          <div className="portfolio-bento-row flex items-end gap-3 min-w-max md:min-w-0">
 
             {/* Card 1 — Brand Refresh, h=400 */}
             <motion.a
@@ -1304,7 +1309,7 @@ export default function Home() {
           </div>
 
           {/* Clickable card deck */}
-          <div className="flex items-end gap-3">
+          <div className="process-deck-3d flex items-end gap-3">
             {processCards.map((step, i) => {
               const isActive = activeProcess === i;
               const icons = [
@@ -1502,7 +1507,7 @@ export default function Home() {
           </div>
 
           {/* Row 1: 3 columns */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+          <div className="tool-grid-3d grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
             {/* Design & UI/UX */}
             <motion.div
               initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -1571,7 +1576,7 @@ export default function Home() {
           </div>
 
           {/* Row 2: 2 columns */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="tool-grid-3d grid grid-cols-1 md:grid-cols-2 gap-3">
             {/* AI & Creative Systems */}
             <motion.div
               initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -1645,10 +1650,10 @@ export default function Home() {
                 className="text-xs font-semibold uppercase tracking-[0.35em] text-primary mb-5"
               >Studio Vision</motion.p>
               <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] text-white mb-8">
-                Designing<br />
-                <span className="text-white/20">Meaningful</span><br />
-                Digital<br />
-                <span className="text-white/20">Experiences</span>
+                <span className="vision-line-3d block">Designing</span>
+                <span className="vision-line-3d block text-white/20">Meaningful</span>
+                <span className="vision-line-3d block">Digital</span>
+                <span className="vision-line-3d block text-white/20">Experiences</span>
               </h2>
               {/* Focus areas */}
               <motion.div
@@ -1762,7 +1767,7 @@ export default function Home() {
                 return (
                   <div
                     key={i}
-                    className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+                    className={`faq-item-3d rounded-2xl border transition-all duration-300 overflow-hidden ${
                       isOpen
                         ? "bg-[#d64238] border-[#d64238] shadow-lg shadow-[#d64238]/20"
                         : "bg-white border-black/[0.07] hover:border-black/15"
@@ -1950,7 +1955,7 @@ export default function Home() {
           </div>
 
           {/* Row 1: Starter + Creator */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="pricing-grid-3d grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             {pricingPackages.slice(0, 2).map((pkg, i) => (
               <motion.div
                 key={pkg.name}
@@ -2036,7 +2041,7 @@ export default function Home() {
           </motion.div>
 
           {/* Row 3: Premium + Cinematic */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="pricing-grid-3d grid grid-cols-1 md:grid-cols-2 gap-4">
             {pricingPackages.slice(3).map((pkg, i) => (
               <motion.div
                 key={pkg.name}
@@ -2291,7 +2296,7 @@ export default function Home() {
           </div>
 
           {/* Cinematic rising "inkaa." */}
-          <div ref={footerTextRef} className="w-full flex items-center justify-center mt-20 relative overflow-hidden -mx-6 px-6">
+          <div ref={footerTextRef} className="footer-text-3d w-full flex items-center justify-center mt-20 relative overflow-hidden -mx-6 px-6">
             <div className="overflow-hidden">
               <motion.h1
                 initial={{ y: "100%", opacity: 0 }}
