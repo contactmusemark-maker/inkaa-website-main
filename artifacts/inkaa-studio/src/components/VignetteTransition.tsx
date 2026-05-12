@@ -34,10 +34,7 @@ export default function VignetteTransition() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{
-            enter: { duration: 0.18, ease: "easeIn" },
-            exit: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
-          }}
+          transition={{ duration: 0.35, ease: "easeInOut" }}
           style={{
             background:
               "radial-gradient(ellipse at center, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.10) 40%, rgba(0,0,0,0.88) 100%)",

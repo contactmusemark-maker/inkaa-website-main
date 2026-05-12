@@ -10,8 +10,10 @@ import {
 } from "framer-motion";
 import { ArrowRight, Menu, Star, ChevronRight, Search, Palette, Code2, Rocket, Bot, Wand2, Layers, Zap, PenTool, Image, Sun, Pen, Monitor, Plus, Minus, Phone, MessageCircle } from "lucide-react";
 import { SiInstagram, SiX, SiFigma, SiFramer, SiGithub, SiOpenai, SiGsap } from "react-icons/si";
-import anime from "animejs/lib/anime.es.js";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CustomCursor from "@/components/CustomCursor";
+import GSAPScrollScene from "@/components/GSAPScrollScene";
 import MarqueeStrip from "@/components/MarqueeStrip";
 import BookCallButton from "@/components/BookCallButton";
 import { SplitText } from "@/components/SplitText";
@@ -250,7 +252,9 @@ function TestimonialCard({ t, delay = 0 }: { t: typeof testimonials[0]; delay?: 
   );
 }
 
-/* ── Cinematic Scroll Storytelling ── */
+/* ── Cinematic Scroll Storytelling — GSAP 3D rotateX scrub ── */
+gsap.registerPlugin(ScrollTrigger);
+
 const cinematicPhrases = [
   { text: "Design is the Language of the Future.", accent: false },
   { text: "Every Pixel Has Purpose.", accent: true },
@@ -262,34 +266,54 @@ function CinematicScrollSection() {
   const sectionRef = React.useRef<HTMLElement>(null);
 
   React.useEffect(() => {
-    const phrases = sectionRef.current?.querySelectorAll<HTMLElement>(".cp-phrase");
-    if (!phrases?.length) return;
-    const observers: IntersectionObserver[] = [];
-    phrases.forEach((phrase) => {
-      const words = phrase.querySelectorAll<HTMLElement>(".cp-word");
-      const obs = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              anime({
-                targets: Array.from(words),
-                opacity: [0, 1],
-                translateY: ["52px", "0px"],
-                filter: ["blur(12px)", "blur(0px)"],
-                duration: 900,
-                easing: "easeOutExpo",
-                delay: anime.stagger(90),
-              });
-              obs.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.35 }
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      const phrases = section.querySelectorAll<HTMLElement>(".cp-phrase");
+
+      phrases.forEach((phrase) => {
+        const words = phrase.querySelectorAll<HTMLElement>(".cp-word");
+
+        gsap.set(words, {
+          rotateX: 90,
+          opacity: 0,
+          transformOrigin: "50% 100%",
+          transformPerspective: 900,
+        });
+
+        gsap.to(words, {
+          rotateX: 0,
+          opacity: 1,
+          stagger: 0.07,
+          duration: 1,
+          ease: "back.out(1.3)",
+          scrollTrigger: {
+            trigger: phrase,
+            start: "top 82%",
+            end: "top 35%",
+            scrub: 1.4,
+          },
+        });
+      });
+
+      gsap.fromTo(
+        ".cp-ambient-orb",
+        { scale: 0.6, opacity: 0 },
+        {
+          scale: 1.2,
+          opacity: 1,
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 2,
+          },
+        }
       );
-      obs.observe(phrase);
-      observers.push(obs);
-    });
-    return () => observers.forEach((o) => o.disconnect());
+    }, section);
+
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -297,33 +321,48 @@ function CinematicScrollSection() {
       ref={sectionRef}
       id="cinematic"
       className="relative bg-[#030303] overflow-hidden py-0"
+      style={{ perspective: "1200px" }}
     >
       {/* Ambient orb */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full pointer-events-none"
+        className="cp-ambient-orb absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle, rgba(214,66,56,0.07) 0%, transparent 65%)",
+            "radial-gradient(circle, rgba(214,66,56,0.10) 0%, transparent 65%)",
           filter: "blur(80px)",
         }}
       />
-      <div className="relative z-10">
+
+      {/* Depth grid lines */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(214,66,56,1) 1px, transparent 1px), linear-gradient(90deg, rgba(214,66,56,1) 1px, transparent 1px)",
+          backgroundSize: "80px 80px",
+        }}
+      />
+
+      <div className="relative z-10" style={{ transformStyle: "preserve-3d" }}>
         {cinematicPhrases.map((item, i) => (
           <div
             key={i}
-            className={`cp-phrase border-b border-white/[0.04] flex items-center min-h-[26vh] px-8 md:px-20 ${
+            className={`cp-phrase border-b border-white/[0.04] flex items-center min-h-[30vh] px-8 md:px-20 ${
               i % 2 === 1 ? "justify-end" : "justify-start"
             }`}
+            style={{ transformStyle: "preserve-3d" }}
           >
             <p
               className={`text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter leading-[1.05] max-w-5xl ${
                 item.accent ? "text-primary" : "text-white"
               }`}
+              style={{ transformStyle: "preserve-3d" }}
             >
               {item.text.split(" ").map((word, j) => (
                 <span
                   key={j}
-                  className="cp-word inline-block opacity-0 mr-[0.25em] last:mr-0"
+                  className="cp-word inline-block mr-[0.25em] last:mr-0"
+                  style={{ transformStyle: "preserve-3d" }}
                 >
                   {word}
                 </span>
@@ -1678,7 +1717,10 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* ── Cinematic Scroll Storytelling (anime.js) ── */}
+      {/* ── GSAP 3D Scroll Scene ── */}
+      <GSAPScrollScene />
+
+      {/* ── Cinematic Scroll Storytelling (GSAP 3D rotateX) ── */}
       <CinematicScrollSection />
 
       {/* ── FAQ ── */}
