@@ -15,6 +15,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CustomCursor from "@/components/CustomCursor";
 import GSAPPageEffects from "@/components/GSAPPageEffects";
 import GSAPScrollScene from "@/components/GSAPScrollScene";
+import ServicesScrollScene from "@/components/ServicesScrollScene";
+import ProcessScrollScene from "@/components/ProcessScrollScene";
 import MarqueeStrip from "@/components/MarqueeStrip";
 import BookCallButton from "@/components/BookCallButton";
 import { SplitText } from "@/components/SplitText";
@@ -379,8 +381,6 @@ function CinematicScrollSection() {
 /* ── Main Page ── */
 export default function Home() {
   const shouldReduce = useReducedMotion();
-  const [activeService, setActiveService] = React.useState(0);
-  const [activeProcess, setActiveProcess] = React.useState(1);
   const [activeSection, setActiveSection] = React.useState("about");
   const [faqOpenIdx, setFaqOpenIdx] = React.useState<number | null>(0);
   const [scrolled, setScrolled] = React.useState(false);
@@ -429,17 +429,6 @@ export default function Home() {
   const aboutTextRef = useRef(null);
   const aboutTextInView = useInView(aboutTextRef, { once: true, margin: "-100px" });
 
-  /* ── Services horizontal scroll ── */
-  const servicesTrackRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: servicesProgress } = useScroll({
-    target: servicesTrackRef,
-    offset: ["start start", "end end"],
-  });
-  const servicesX = useTransform(servicesProgress, [0, 1], ["0%", "-58%"]);
-  const servicesXSpring = useSpring(servicesX, { stiffness: 50, damping: 20 });
-  const servicesHeadingRef = useRef(null);
-  const servicesHeadingInView = useInView(servicesHeadingRef, { once: true, margin: "-80px" });
-
   /* ── Portfolio per-card parallax ── */
   const workRef = useRef<HTMLElement>(null);
   const { scrollYProgress: workProgress } = useScroll({
@@ -448,11 +437,6 @@ export default function Home() {
   });
   const workHeadingRef = useRef(null);
   const workHeadingInView = useInView(workHeadingRef, { once: true, margin: "-80px" });
-
-  /* ── Process section ── */
-  const processRef = useRef<HTMLElement>(null);
-  const processHeadingRef = useRef(null);
-  const processHeadingInView = useInView(processHeadingRef, { once: true, margin: "-80px" });
 
   /* ── Testimonials floating columns ── */
   const testimonialsRef = useRef<HTMLElement>(null);
@@ -529,7 +513,7 @@ export default function Home() {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 right-0 z-50 px-6 h-16 flex items-center justify-between bg-white/95 backdrop-blur-xl border-b border-black/8 shadow-[0_1px_12px_rgba(0,0,0,0.06)]"
+        className="fixed top-4 left-4 right-4 z-50 px-6 h-14 flex items-center justify-between bg-white/90 backdrop-blur-xl rounded-2xl border border-black/8 shadow-[0_8px_32px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.06)]"
       >
         {/* Logo */}
         <motion.div
@@ -838,183 +822,8 @@ export default function Home() {
       {/* ── Marquee ── */}
       <div className="marquee-3d"><MarqueeStrip /></div>
 
-      {/* ── 4. Services — 3D Fan Carousel ── */}
-      <motion.section
-        id="services"
-        className="py-24 bg-background relative overflow-hidden"
-        initial={{ opacity: 0, filter: shouldReduce ? "blur(0px)" : "blur(8px)" }}
-        whileInView={{ opacity: 1, filter: "blur(0px)" }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-      >
-        {/* Section heading */}
-        <div className="text-center mb-14 px-6">
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-xs font-semibold uppercase tracking-[0.35em] text-primary mb-3"
-          >Capabilities</motion.p>
-          <SplitText
-            text="Core Services"
-            as="h3"
-            className="text-4xl md:text-6xl font-black tracking-tighter mb-4"
-            delay={0.05}
-            stagger={0.06}
-          />
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-muted-foreground font-light text-lg"
-          >
-            Premium design solutions for ambitious brands.
-          </motion.p>
-        </div>
-
-        {/* Fan carousel stage */}
-        <div
-          className="relative mx-auto select-none"
-          style={{ height: "520px", perspective: "1100px" }}
-        >
-          <div className="absolute inset-0 flex items-center justify-center">
-            {coreServices.map((service, i) => {
-              const pos = i - activeService;
-              const absPos = Math.abs(pos);
-              if (absPos > 2) return null;
-
-              const xMap   = [0, 290, 500];
-              const ryMap  = [0, 28, 46];
-              const scMap  = [1, 0.80, 0.62];
-              const opMap  = [1, 0.72, 0.38];
-              const blMap  = ["blur(0px)", "blur(1.5px)", "blur(3px)"];
-              const zMap   = [10, 6, 2];
-
-              const x        = pos * xMap[absPos];
-              const rotateY  = pos < 0 ? ryMap[absPos] : -ryMap[absPos];
-              const scale    = scMap[absPos];
-              const opacity  = opMap[absPos];
-              const filter   = blMap[absPos];
-              const zIndex   = zMap[absPos];
-
-              return (
-                <motion.div
-                  key={service.title}
-                  onClick={() => setActiveService(i)}
-                  animate={{ x, rotateY, scale, opacity, filter }}
-                  transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute cursor-pointer"
-                  style={{
-                    width: 300,
-                    height: 440,
-                    zIndex,
-                    transformOrigin: "center center",
-                    transformStyle: "preserve-3d",
-                  }}
-                  whileHover={absPos !== 0 ? { scale: scale * 1.04 } : {}}
-                >
-                  {/* Card */}
-                  <div className="relative w-full h-full rounded-[2rem] overflow-hidden shadow-2xl">
-                    <img
-                      src={service.img}
-                      alt={service.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/5" />
-
-                    {/* Top tag */}
-                    <div className="absolute top-5 left-5">
-                      <span className="text-[10px] font-mono font-semibold uppercase tracking-widest text-white/70 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/15">
-                        {service.tag}
-                      </span>
-                    </div>
-
-                    {/* Bottom info */}
-                    <div className="absolute bottom-0 left-0 right-0 p-6">
-                      <p className="text-white/40 font-mono text-[11px] tracking-widest mb-1 uppercase">Starting at</p>
-                      <p className="text-primary font-bold text-lg mb-1 font-mono">{service.price}</p>
-                      <h4 className="text-white font-bold text-2xl leading-tight mb-4">{service.title}</h4>
-                      {absPos === 0 && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.2, duration: 0.4 }}
-                        >
-                          <Button
-                            className="rounded-full bg-white text-black hover:bg-primary hover:text-white text-sm px-5 h-10"
-                            asChild
-                          >
-                            <a href="#inquiry">Inquire Now</a>
-                          </Button>
-                        </motion.div>
-                      )}
-                    </div>
-
-                    {/* Active glow ring */}
-                    {absPos === 0 && (
-                      <motion.div
-                        layoutId="service-ring"
-                        className="absolute inset-0 rounded-[2rem] border-2 border-primary/60 pointer-events-none"
-                      />
-                    )}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Navigation controls */}
-        <div className="flex items-center justify-center gap-6 mt-10">
-          {/* Prev */}
-          <motion.button
-            onClick={() => setActiveService((v) => Math.max(0, v - 1))}
-            disabled={activeService === 0}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.92 }}
-            className="w-11 h-11 rounded-full border border-border flex items-center justify-center text-foreground/60 hover:border-primary hover:text-primary disabled:opacity-25 transition-colors duration-200"
-          >
-            <ChevronRight className="w-4 h-4 rotate-180" />
-          </motion.button>
-
-          {/* Dots */}
-          <div className="flex items-center gap-2">
-            {coreServices.map((_, i) => (
-              <motion.button
-                key={i}
-                onClick={() => setActiveService(i)}
-                animate={{
-                  width: i === activeService ? 28 : 8,
-                  backgroundColor: i === activeService ? "rgb(214,66,56)" : "rgba(255,255,255,0.2)",
-                }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="h-2 rounded-full"
-              />
-            ))}
-          </div>
-
-          {/* Next */}
-          <motion.button
-            onClick={() => setActiveService((v) => Math.min(coreServices.length - 1, v + 1))}
-            disabled={activeService === coreServices.length - 1}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.92 }}
-            className="w-11 h-11 rounded-full border border-border flex items-center justify-center text-foreground/60 hover:border-primary hover:text-primary disabled:opacity-25 transition-colors duration-200"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </motion.button>
-        </div>
-
-        {/* Service count */}
-        <div className="text-center mt-4">
-          <span className="text-xs font-mono text-foreground/30 tracking-widest uppercase">
-            {String(activeService + 1).padStart(2, "0")} / {String(coreServices.length).padStart(2, "0")}
-          </span>
-        </div>
-      </motion.section>
+      {/* ── 4. Services — GSAP Scroll Pinned Scene ── */}
+      <ServicesScrollScene />
 
       {/* ── 4b. Design Add-ons ── */}
       <motion.section
@@ -1266,112 +1075,8 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* ── 6. Process ── */}
-      <motion.section
-        id="process"
-        ref={processRef}
-        className="py-24 bg-[#f5f5f5] relative overflow-hidden"
-        initial={{ opacity: 0, filter: shouldReduce ? "blur(0px)" : "blur(8px)" }}
-        whileInView={{ opacity: 1, filter: "blur(0px)" }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <div className="container max-w-6xl mx-auto px-6">
-          {/* Header */}
-          <div ref={processHeadingRef} className="mb-14">
-            <motion.span
-              initial={{ opacity: 0, y: 12 }}
-              animate={processHeadingInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-black/40 bg-black/[0.06] border border-black/[0.08] rounded-full px-4 py-1.5 mb-8"
-            >
-              <Rocket className="w-2.5 h-2.5" /> Process
-            </motion.span>
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={processHeadingInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.7, delay: 0.1 }}
-              >
-                <h3 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.88] text-black">
-                  How I <br /><span className="text-black/15">Work.</span>
-                </h3>
-              </motion.div>
-              <motion.p
-                initial={{ opacity: 0, x: 20 }}
-                animate={processHeadingInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.25 }}
-                className="text-black/45 max-w-xs text-sm font-light leading-relaxed md:text-right"
-              >
-                A refined four-step creative process built for precision, clarity, and premium outcomes at every stage.
-              </motion.p>
-            </div>
-          </div>
-
-          {/* Clickable card deck */}
-          <div className="process-deck-3d flex items-end gap-3">
-            {processCards.map((step, i) => {
-              const isActive = activeProcess === i;
-              const icons = [
-                <Search className={`w-4 h-4 transition-colors duration-300 ${isActive ? "text-primary" : "text-black/35"}`} />,
-                <Palette className={`w-4 h-4 transition-colors duration-300 ${isActive ? "text-primary" : "text-black/35"}`} />,
-                <Code2 className={`w-4 h-4 transition-colors duration-300 ${isActive ? "text-primary" : "text-black/35"}`} />,
-                <Rocket className={`w-4 h-4 transition-colors duration-300 ${isActive ? "text-primary" : "text-black/35"}`} />,
-              ];
-              return (
-                <motion.div
-                  key={i}
-                  layout
-                  onClick={() => setActiveProcess(i)}
-                  transition={{ layout: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }}
-                  className="relative cursor-pointer rounded-[1.75rem] bg-white border border-black/[0.06] overflow-hidden flex flex-col justify-between"
-                  style={{
-                    flex: isActive ? 2.5 : 1,
-                    height: isActive ? 440 : 280,
-                    padding: isActive ? 28 : 24,
-                    transition: "flex 0.5s cubic-bezier(0.16,1,0.3,1), height 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s",
-                    boxShadow: isActive ? "0 8px 40px rgba(0,0,0,0.08)" : "none",
-                  }}
-                >
-                  {/* Top gradient area for active card */}
-                  {isActive && (
-                    <div className="absolute top-0 left-0 right-0 h-32 rounded-t-[1.75rem] overflow-hidden pointer-events-none">
-                      <div className="w-full h-full" style={{ background: "linear-gradient(135deg, rgba(214,66,56,0.09) 0%, rgba(214,66,56,0.02) 100%)" }} />
-                      <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 25% 60%, rgba(214,66,56,0.1) 0%, transparent 65%)" }} />
-                    </div>
-                  )}
-                  {/* Large step number */}
-                  <div>
-                    <p className="font-black tracking-tighter leading-none select-none" style={{ fontSize: isActive ? "5rem" : "4rem", color: isActive ? "rgba(0,0,0,0.05)" : "rgba(0,0,0,0.04)", transition: "font-size 0.4s, color 0.3s" }}>
-                      {step.num}.
-                    </p>
-                  </div>
-                  {/* Bottom content */}
-                  <div className="relative z-10">
-                    <div className={`mb-3 w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-300 ${isActive ? "bg-primary/10" : "bg-black/5"}`}>
-                      {icons[i]}
-                    </div>
-                    <h4 className="font-bold leading-tight text-black" style={{ fontSize: isActive ? "1.35rem" : "0.95rem", transition: "font-size 0.4s" }}>
-                      {step.title}
-                    </h4>
-                    {isActive && (
-                      <motion.p
-                        key={`desc-${i}`}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.15 }}
-                        className="text-black/45 text-sm font-light leading-relaxed mt-3 max-w-[280px]"
-                      >
-                        {step.desc}
-                      </motion.p>
-                    )}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </motion.section>
+      {/* ── 6. Process — GSAP Scroll Pinned Scene ── */}
+      <ProcessScrollScene />
 
       {/* ── 7. Testimonials ── */}
       <motion.section
