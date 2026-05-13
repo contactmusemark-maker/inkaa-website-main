@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import {
   motion,
+  AnimatePresence,
   useScroll,
   useTransform,
   useSpring,
@@ -36,6 +37,7 @@ const navLinks = [
   { name: "Process", id: "process" },
   { name: "Tools", id: "tools" },
   { name: "Vision", id: "vision" },
+  { name: "Products", id: "products" },
   { name: "FAQ", id: "faq" },
   { name: "Pricing", id: "pricing" },
 ];
@@ -146,6 +148,37 @@ const processCards = [
   { num: "02", title: "Design & Concept", desc: "Crafting cinematic brand systems, high-fidelity interfaces, and motion concepts perfectly aligned to your vision." },
   { num: "03", title: "Build & Refine", desc: "Engineering the final product with clean code, smooth animations, and premium micro-interactions that feel alive." },
   { num: "04", title: "Launch & Evolve", desc: "Deploying your product and supporting post-launch growth with analytics, feedback loops, and iteration." },
+];
+
+const inkaaProducts = [
+  {
+    id: "marketing",
+    tab: "inkaa Marketing",
+    name: "inkaa.",
+    nameAccent: "Marketing",
+    tagline: "Digital marketing software built for modern brands.",
+    url: "marketing.inkaastudio.com",
+    href: "https://marketing.inkaastudio.com",
+    description: "A powerful all-in-one digital marketing platform designed to help brands grow faster — with AI-assisted campaigns, analytics dashboards, social scheduling, and creative automation built right in.",
+    features: ["AI Campaign Generator", "Social Media Scheduler", "Analytics Dashboard", "Brand Asset Manager", "Lead Tracking", "Email Automation"],
+    accent: "#d64238",
+    badge: "Software",
+    status: "Live",
+  },
+  {
+    id: "campus",
+    tab: "inkaa Campus",
+    name: "inkaa.",
+    nameAccent: "Campus",
+    tagline: "Learn design, branding, and creative direction.",
+    url: "campus.inkaastudio.com",
+    href: "https://campus.inkaastudio.com",
+    description: "An education platform where designers, founders, and creators learn the art of cinematic branding, UI/UX, and motion design — through structured courses taught by Moses Martin himself.",
+    features: ["Live Cohorts", "Design Courses", "Branding Masterclass", "Motion Design Labs", "Mentorship Access", "Community Forums"],
+    accent: "#d64238",
+    badge: "Education",
+    status: "Coming Soon",
+  },
 ];
 
 const testimonials = [
@@ -384,6 +417,7 @@ export default function Home() {
   const [activeSection, setActiveSection] = React.useState("about");
   const [faqOpenIdx, setFaqOpenIdx] = React.useState<number | null>(0);
   const [scrolled, setScrolled] = React.useState(false);
+  const [activeProduct, setActiveProduct] = React.useState(0);
   React.useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 80);
     window.addEventListener("scroll", fn, { passive: true });
@@ -1432,6 +1466,183 @@ export default function Home() {
 
       {/* ── Cinematic Scroll Storytelling (GSAP 3D rotateX) ── */}
       <CinematicScrollSection />
+
+      {/* ── Products ── */}
+      <section id="products" className="py-28 bg-[#030303] relative overflow-hidden">
+        {/* Ambient glow that shifts per product */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeProduct}
+            className="absolute inset-0 pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            style={{
+              background: activeProduct === 0
+                ? "radial-gradient(ellipse 70% 55% at 70% 50%, rgba(214,66,56,0.07) 0%, transparent 70%)"
+                : "radial-gradient(ellipse 70% 55% at 30% 50%, rgba(214,66,56,0.07) 0%, transparent 70%)",
+            }}
+          />
+        </AnimatePresence>
+
+        <div className="container max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+          {/* Header */}
+          <div className="mb-14">
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="text-xs font-semibold uppercase tracking-[0.35em] text-primary mb-4"
+            >Our Products</motion.p>
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+                className="text-5xl md:text-7xl font-black tracking-tighter text-white leading-[0.9]"
+              >
+                Built for<br /><span className="text-white/15">the Future.</span>
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.25 }}
+                className="text-white/35 max-w-xs text-sm font-light leading-relaxed md:text-right"
+              >
+                Beyond client work — tools and platforms we're building to push the ecosystem forward.
+              </motion.p>
+            </div>
+          </div>
+
+          {/* Tab switcher */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex items-center gap-2 mb-10 p-1 bg-white/[0.04] border border-white/[0.07] rounded-2xl w-fit"
+          >
+            {inkaaProducts.map((p, i) => (
+              <button
+                key={p.id}
+                onClick={() => setActiveProduct(i)}
+                className="relative px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors duration-200 focus:outline-none"
+                style={{ color: activeProduct === i ? "#030303" : "rgba(255,255,255,0.45)" }}
+              >
+                {activeProduct === i && (
+                  <motion.span
+                    layoutId="product-tab-bg"
+                    className="absolute inset-0 bg-white rounded-xl"
+                    transition={{ type: "spring", bounce: 0.22, duration: 0.45 }}
+                  />
+                )}
+                <span className="relative z-10">{p.tab}</span>
+              </button>
+            ))}
+          </motion.div>
+
+          {/* Product card */}
+          <AnimatePresence mode="wait">
+            {inkaaProducts.map((product, i) =>
+              i !== activeProduct ? null : (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -16, filter: "blur(6px)" }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  className="grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden border border-white/[0.07] bg-white/[0.02]"
+                >
+                  {/* Left — product info */}
+                  <div className="p-10 md:p-14 flex flex-col justify-between gap-10">
+                    <div>
+                      {/* Status + badge row */}
+                      <div className="flex items-center gap-3 mb-8">
+                        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-white/40 bg-white/[0.06] border border-white/[0.08] rounded-full px-4 py-1.5">
+                          {product.badge}
+                        </span>
+                        <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest rounded-full px-4 py-1.5 ${
+                          product.status === "Live"
+                            ? "text-emerald-400 bg-emerald-400/10 border border-emerald-400/20"
+                            : "text-amber-400 bg-amber-400/10 border border-amber-400/20"
+                        }`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${product.status === "Live" ? "bg-emerald-400 animate-pulse" : "bg-amber-400"}`} />
+                          {product.status}
+                        </span>
+                      </div>
+
+                      {/* Product name */}
+                      <h3 className="text-5xl md:text-6xl font-black tracking-tighter text-white leading-none mb-2">
+                        {product.name}
+                        <span className="text-primary">{product.nameAccent}</span>
+                      </h3>
+
+                      {/* URL */}
+                      <p className="text-white/25 font-mono text-xs tracking-widest mb-6">
+                        ↗ {product.url}
+                      </p>
+
+                      {/* Tagline */}
+                      <p className="text-white/60 text-lg font-light leading-relaxed mb-6">
+                        {product.tagline}
+                      </p>
+
+                      {/* Description */}
+                      <p className="text-white/35 text-sm font-light leading-relaxed">
+                        {product.description}
+                      </p>
+                    </div>
+
+                    {/* CTA */}
+                    <div>
+                      <a
+                        href={product.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 bg-primary text-white font-semibold text-sm px-7 h-12 rounded-full hover:bg-primary/90 transition-colors duration-200"
+                      >
+                        Explore {product.nameAccent} <ArrowRight className="w-4 h-4" />
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Right — features grid */}
+                  <div className="p-10 md:p-14 bg-white/[0.02] border-l border-white/[0.06] flex flex-col justify-center">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/25 mb-7">
+                      Key Features
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {product.features.map((feat, fi) => (
+                        <motion.div
+                          key={feat}
+                          initial={{ opacity: 0, x: 12 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.4, delay: fi * 0.07 }}
+                          className="flex items-center gap-3 bg-white/[0.04] border border-white/[0.06] rounded-xl px-4 py-3"
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                          <span className="text-white/70 text-sm font-light">{feat}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {/* Bottom decorative element */}
+                    <div className="mt-10 pt-8 border-t border-white/[0.06]">
+                      <p className="text-white/15 font-mono text-[11px] tracking-widest uppercase">
+                        An inkaa Studio product · {new Date().getFullYear()}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              )
+            )}
+          </AnimatePresence>
+        </div>
+      </section>
 
       {/* ── FAQ ── */}
       <section id="faq" className="py-28 px-6 bg-[#f7f7f7] relative overflow-hidden">
