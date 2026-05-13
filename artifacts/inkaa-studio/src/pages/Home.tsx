@@ -11,11 +11,7 @@ import {
 } from "framer-motion";
 import { ArrowRight, Menu, Star, ChevronRight, Search, Palette, Code2, Rocket, Bot, Wand2, Layers, Zap, PenTool, Image, Sun, Pen, Monitor, Plus, Minus, Phone, MessageCircle } from "lucide-react";
 import { SiInstagram, SiX, SiFigma, SiFramer, SiGithub, SiOpenai, SiGsap } from "react-icons/si";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CustomCursor from "@/components/CustomCursor";
-import GSAPPageEffects from "@/components/GSAPPageEffects";
-import GSAPScrollScene from "@/components/GSAPScrollScene";
 import ServicesScrollScene from "@/components/ServicesScrollScene";
 import ProcessScrollScene from "@/components/ProcessScrollScene";
 import MarqueeStrip from "@/components/MarqueeStrip";
@@ -288,56 +284,6 @@ function TestimonialCard({ t, delay = 0 }: { t: typeof testimonials[0]; delay?: 
   );
 }
 
-/* ── Cinematic Phrase Section — pure Framer Motion, no GSAP conflicts ── */
-const cinematicPhrases = [
-  { text: "Design is the Language of the Future.", accent: false },
-  { text: "Every Pixel Has Purpose.", accent: true },
-  { text: "Motion Tells the Story.", accent: false },
-  { text: "We Build Experiences, Not Just Websites.", accent: false },
-];
-
-function CinematicScrollSection() {
-  return (
-    <section id="cinematic" className="relative bg-[#030303] overflow-hidden">
-      {/* Ambient orb */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(214,66,56,0.09) 0%, transparent 65%)", filter: "blur(80px)" }}
-      />
-      {/* Grid lines */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.025]"
-        style={{
-          backgroundImage: "linear-gradient(rgba(214,66,56,1) 1px, transparent 1px), linear-gradient(90deg, rgba(214,66,56,1) 1px, transparent 1px)",
-          backgroundSize: "80px 80px",
-        }}
-      />
-      <div className="relative z-10">
-        {cinematicPhrases.map((item, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className={`border-b border-white/[0.04] flex items-center min-h-[28vh] px-8 md:px-20 ${
-              i % 2 === 1 ? "justify-end" : "justify-start"
-            }`}
-          >
-            <p
-              className={`text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter leading-[1.05] max-w-5xl ${
-                item.accent ? "text-primary" : "text-white"
-              }`}
-            >
-              {item.text}
-            </p>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 /* ── Main Page ── */
 export default function Home() {
   const shouldReduce = useReducedMotion();
@@ -367,6 +313,8 @@ export default function Home() {
   /* ── Global scroll progress bar ── */
   const { scrollYProgress: globalProgress } = useScroll();
   const progressBarScale = useSpring(globalProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+  const progressDotX = useTransform(progressBarScale, (s) => `calc(${Math.min(s, 0.9999) * 100}% - 2.5px)`);
+  const progressDotOpacity = useTransform(progressBarScale, [0, 0.01, 0.99, 1], [0, 1, 1, 0]);
 
   /* ── Hero scroll-driven parallax ── */
   const heroRef = useRef<HTMLElement>(null);
@@ -459,7 +407,6 @@ export default function Home() {
 
   return (
     <div className="w-full min-h-[100dvh] bg-background text-foreground overflow-x-hidden selection:bg-primary selection:text-white font-sans">
-      <GSAPPageEffects />
       <CustomCursor />
       <BookCallButton />
 
@@ -482,10 +429,10 @@ export default function Home() {
           className="absolute top-0 w-[5px] h-[5px] rounded-full -translate-y-[1.5px]"
           style={{
             left: 0,
-            x: useTransform(progressBarScale, (s) => `calc(${Math.min(s, 0.9999) * 100}% - 2.5px)`),
+            x: progressDotX,
             background: "#fff",
             boxShadow: "0 0 6px 2px rgba(214,66,56,0.9), 0 0 12px 4px rgba(214,66,56,0.5)",
-            opacity: useTransform(progressBarScale, [0, 0.01, 0.99, 1], [0, 1, 1, 0]),
+            opacity: progressDotOpacity,
           }}
         />
       </div>
@@ -1408,12 +1355,6 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
-
-      {/* ── GSAP 3D Scroll Scene ── */}
-      <GSAPScrollScene />
-
-      {/* ── Cinematic Scroll Storytelling (GSAP 3D rotateX) ── */}
-      <CinematicScrollSection />
 
       {/* ── Products ── */}
       <section id="products" className="py-28 bg-[#030303] relative overflow-hidden">
