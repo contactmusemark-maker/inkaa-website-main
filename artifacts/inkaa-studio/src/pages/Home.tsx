@@ -17,8 +17,8 @@ import ProcessScrollScene from "@/components/ProcessScrollScene";
 import MarqueeStrip from "@/components/MarqueeStrip";
 import BookCallButton from "@/components/BookCallButton";
 import { SplitText } from "@/components/SplitText";
-import newFounderPhoto from "@assets/Untitled_design_(1)_1778455130934.png";
-import founderPhoto from "@assets/Untitled_design_1778451365026.png";
+import newFounderPhoto from "@assets/Untitled_design_(1)_1778455130934.optimized.webp";
+import founderPhoto from "@assets/Untitled_design_1778451365026.optimized.webp";
 import inkaaLogo from "@assets/Black_and_White_Simple_Profile_Picture_LinkedIn_Profile_Pictur_1778451411760.png";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -173,6 +173,20 @@ const inkaaProducts = [
     features: ["Live Cohorts", "Design Courses", "Branding Masterclass", "Motion Design Labs", "Mentorship Access", "Community Forums"],
     accent: "#d64238",
     badge: "Education",
+    status: "Coming Soon",
+  },
+  {
+    id: "peopleos",
+    tab: "inkaa PeopleOS",
+    name: "inkaa.",
+    nameAccent: "PeopleOS",
+    tagline: "AI-powered workforce operating system for modern teams.",
+    url: "peopleos.inkaastudio.com",
+    href: "https://peopleos.inkaastudio.com",
+    description: "An AI-powered workforce operating system that manages the entire employee lifecycle — from hiring to payroll to performance — in one intelligent platform. One central business operating system for employees and HR teams.",
+    features: ["AI Hiring Workflows", "Employee Lifecycle OS", "Payroll Intelligence", "Performance Reviews", "HR Team Workspace", "People Analytics"],
+    accent: "#d64238",
+    badge: "Software",
     status: "Coming Soon",
   },
 ];
@@ -331,10 +345,11 @@ export default function Home() {
   const aboutImageRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: aboutImgProgress } = useScroll({
     target: aboutImageRef,
-    offset: ["start end", "center 40%"],
+    offset: ["start 92%", "center 54%"],
   });
-  const aboutClip  = useTransform(aboutImgProgress, [0, 1], ["inset(100% 0% 0% 0%)", "inset(0% 0% 0% 0%)"]);
-  const aboutImgScale = useTransform(aboutImgProgress, [0, 1], [1.25, 1]);
+  const aboutClip = useTransform(aboutImgProgress, [0, 1], ["inset(14% 0% 0% 0%)", "inset(0% 0% 0% 0%)"]);
+  const aboutImgScale = useTransform(aboutImgProgress, [0, 1], [1.07, 1.015]);
+  const aboutImgY = useTransform(aboutImgProgress, [0, 1], ["-1.5%", "1.5%"]);
   const aboutTextRef = useRef(null);
   const aboutTextInView = useInView(aboutTextRef, { once: true, margin: "-100px" });
 
@@ -451,7 +466,7 @@ export default function Home() {
           transition={{ delay: 0.15 }}
           className="flex items-center gap-2.5 flex-shrink-0"
         >
-          <img src={inkaaLogo} alt="Inkaa Studio Logo" className="w-8 h-8 rounded-full" />
+          <img src={inkaaLogo} alt="Inkaa Studio Logo" loading="eager" decoding="async" className="w-8 h-8 rounded-full" />
           <span className="font-bold text-lg tracking-tight text-black">inkaa.</span>
         </motion.div>
 
@@ -633,6 +648,9 @@ export default function Home() {
               transition={{ duration: 1.3, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
               src={newFounderPhoto}
               alt="Moses Martin"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               className="relative z-10 h-full w-auto object-contain object-bottom select-none"
               style={{ maxWidth: "100%", filter: "drop-shadow(-20px 0px 40px rgba(0,0,0,0.15))" }}
             />
@@ -740,8 +758,10 @@ export default function Home() {
               <motion.img
                 src={founderPhoto}
                 alt="Moses Martin Profile"
+                loading="lazy"
+                decoding="async"
                 className="absolute inset-0 w-full h-full object-cover grayscale"
-                style={{ scale: aboutImgScale }}
+                style={{ scale: aboutImgScale, y: aboutImgY, objectPosition: "50% 38%" }}
               />
             </motion.div>
           </div>
@@ -781,7 +801,7 @@ export default function Home() {
                 whileHover={{ y: -6, scale: 1.03 }}
                 className="group relative h-56 rounded-2xl overflow-hidden cursor-pointer"
               >
-                <img src={service.img} alt={service.title} className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                <img src={service.img} alt={service.title} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10 group-hover:from-black/90 transition-colors duration-500" />
                 <div className="absolute inset-0 p-4 flex flex-col justify-end">
                   <h5 className="text-white font-semibold leading-tight mb-1 text-sm">{service.title}</h5>
@@ -800,206 +820,125 @@ export default function Home() {
       <motion.section
         id="work"
         ref={workRef}
-        className="py-24 bg-[#0d0d0d] relative overflow-hidden"
+        className="py-24 bg-[#f6f3ee] relative overflow-hidden text-black"
         initial={{ opacity: 0, filter: shouldReduce ? "blur(0px)" : "blur(8px)" }}
         whileInView={{ opacity: 1, filter: "blur(0px)" }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
       >
-        {/* Heading */}
-        <div ref={workHeadingRef} className="px-6 md:px-12 mb-14 flex flex-col md:flex-row md:items-end justify-between gap-6 container max-w-7xl mx-auto">
-          <div>
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_16%,rgba(214,66,56,0.08),transparent_28%),radial-gradient(circle_at_78%_68%,rgba(0,0,0,0.06),transparent_30%)]" />
+
+        <div ref={workHeadingRef} className="container relative z-10 mx-auto mb-12 max-w-7xl px-6 md:px-12">
+          <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-[160px_1fr_160px]">
+            <motion.a
+              href="https://heyimartin.framer.ai/"
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 18 }}
               animate={workHeadingInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5 }}
-              className="text-xs font-semibold uppercase tracking-[0.35em] text-primary mb-3"
-            >Selected Works</motion.p>
-            <SplitText
-              text="Portfolio Showcase"
-              as="h3"
-              className="text-4xl md:text-6xl font-black tracking-tighter text-white"
-              delay={0.05}
-              stagger={0.05}
-            />
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="hidden h-24 w-24 items-center justify-center rounded-full border border-black/10 bg-white/55 backdrop-blur-md md:flex"
+              aria-label="Learn about this portfolio"
+            >
+              <span className="absolute h-full w-full animate-[spin_18s_linear_infinite] rounded-full text-[8px] font-bold uppercase tracking-[0.22em] text-black/40 [writing-mode:vertical-rl]">
+                Learn about this works
+              </span>
+              <span className="ml-1 h-0 w-0 border-y-[7px] border-l-[11px] border-y-transparent border-l-black" />
+            </motion.a>
+
+            <div className="text-center">
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                animate={workHeadingInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5 }}
+                className="mb-4 text-xs font-semibold uppercase tracking-[0.35em] text-primary"
+              >
+                Selected Works
+              </motion.p>
+              <SplitText
+                text="Elevate Your Brand With Bold Digital Experiences"
+                as="h3"
+                className="mx-auto max-w-5xl text-5xl font-black leading-[0.96] tracking-normal text-black md:text-7xl"
+                delay={0.05}
+                stagger={0.035}
+              />
+            </div>
+
+            <motion.p
+              initial={{ opacity: 0, y: 18 }}
+              animate={workHeadingInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="hidden justify-self-end md:flex -space-x-3 pt-6"
+            >
+              {[projects[1].img, projects[2].img, projects[0].img].map((img, i) => (
+                <span key={img} className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-[#f6f3ee] bg-black">
+                  <img src={img} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+                  {i === 2 && (
+                    <span className="absolute inset-0 flex items-center justify-center bg-black text-sm font-bold text-white">
+                      +
+                    </span>
+                  )}
+                </span>
+              ))}
+            </motion.p>
           </div>
-          <motion.a
-            href="https://heyimartin.framer.ai/"
-            target="_blank"
-            rel="noopener noreferrer"
-            initial={{ opacity: 0, x: 30 }}
-            animate={workHeadingInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-white/50 hover:text-primary transition-colors duration-200 flex-shrink-0"
-          >
-            View Full Portfolio <ArrowRight className="w-4 h-4" />
-          </motion.a>
         </div>
 
-        {/* Scattered bento row */}
-        <div className="px-6 md:px-12 overflow-x-auto pb-2">
-          <div className="portfolio-bento-row flex items-end gap-3 min-w-max md:min-w-0">
+        <div className="container relative z-10 mx-auto max-w-7xl px-6 md:px-12">
+          <div className="portfolio-bento-row grid grid-cols-1 gap-5 md:grid-cols-[1fr_1.05fr_0.95fr_1.05fr_1fr] md:items-end">
+            <div className="grid gap-5">
+              <motion.a href="https://heyimartin.framer.ai/" target="_blank" rel="noopener noreferrer" whileHover={{ y: -8 }} className="group relative h-72 overflow-hidden rounded-[1.75rem] md:h-[300px]">
+                <img src={projects[0].img} alt={projects[0].title} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[50%_52%] transition-transform duration-700 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                <p className="absolute bottom-5 left-5 text-lg font-bold text-white">{projects[0].title}</p>
+              </motion.a>
+              <motion.a href="https://heyimartin.framer.ai/" target="_blank" rel="noopener noreferrer" whileHover={{ y: -8 }} className="group relative h-40 overflow-hidden rounded-[1.75rem] md:h-[140px]">
+                <img src={projects[2].img} alt={projects[2].title} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[50%_50%] transition-transform duration-700 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-primary/30" />
+                <p className="absolute bottom-5 left-5 text-lg font-bold text-white">{projects[2].title}</p>
+              </motion.a>
+            </div>
 
-            {/* Card 1 — Brand Refresh, h=400 */}
-            <motion.a
-              href="https://heyimartin.framer.ai/" target="_blank" rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.75, delay: 0, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -6 }}
-              className="relative flex-shrink-0 rounded-[1.75rem] overflow-hidden cursor-pointer group"
-              style={{ width: 250, height: 400 }}
-            >
-              <img src={projects[0].img} alt={projects[0].title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
-              <div className="absolute inset-0 p-5 flex flex-col justify-between">
-                <div className="flex items-start justify-between">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/60 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">{projects[0].tag}</span>
-                  <div className="w-8 h-8 rounded-full bg-white/15 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-colors duration-300">
-                    <ArrowRight className="w-3.5 h-3.5 text-white -rotate-45" />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-white/40 font-mono text-[10px] tracking-widest uppercase mb-1">Project 01</p>
-                  <h4 className="text-white font-bold text-xl leading-tight">{projects[0].title}</h4>
-                </div>
-              </div>
+            <motion.a href="https://heyimartin.framer.ai/" target="_blank" rel="noopener noreferrer" whileHover={{ y: -8 }} className="group relative h-[440px] overflow-hidden rounded-[1.75rem] md:h-[390px]">
+              <img src={projects[1].img} alt={projects[1].title} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[48%_50%] transition-transform duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/5 to-transparent" />
+              <p className="absolute bottom-5 left-5 text-xl font-bold text-white">{projects[1].title}</p>
             </motion.a>
 
-            {/* Card 2 — App UI, h=500 (tallest) */}
-            <motion.a
-              href="https://heyimartin.framer.ai/" target="_blank" rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.75, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -6 }}
-              className="relative flex-shrink-0 rounded-[1.75rem] overflow-hidden cursor-pointer group"
-              style={{ width: 230, height: 500 }}
-            >
-              <img src={projects[1].img} alt={projects[1].title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-              <div className="absolute inset-0 p-5 flex flex-col justify-between">
-                <div className="flex items-start justify-between">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/60 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">{projects[1].tag}</span>
-                  <div className="w-8 h-8 rounded-full bg-white/15 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-colors duration-300">
-                    <ArrowRight className="w-3.5 h-3.5 text-white -rotate-45" />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-white/40 font-mono text-[10px] tracking-widest uppercase mb-1">Project 02</p>
-                  <h4 className="text-white font-bold text-xl leading-tight">{projects[1].title}</h4>
-                </div>
-              </div>
-            </motion.a>
-
-            {/* Card 3 — Stat card (shortest, center) */}
-            <motion.div
-              initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.75, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
-              className="relative flex-shrink-0 rounded-[1.75rem] overflow-hidden flex flex-col justify-between p-6 border border-white/8"
-              style={{ width: 230, height: 340, background: "rgba(255,255,255,0.04)" }}
-            >
-              <div>
-                <p className="text-white/35 text-xs font-mono uppercase tracking-widest mb-3">Portfolio</p>
-                <p className="text-white font-black text-5xl leading-none tracking-tight">50+</p>
-                <p className="text-white/50 text-base font-light mt-2 leading-snug">Projects<br />Delivered</p>
-              </div>
-              <a
-                href="https://heyimartin.framer.ai/" target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-white/70 hover:text-primary transition-colors duration-200 group"
+            <div className="grid gap-5">
+              <motion.a href="https://heyimartin.framer.ai/" target="_blank" rel="noopener noreferrer" whileHover={{ y: -8 }} className="group relative h-64 overflow-hidden rounded-[1.75rem] md:h-[230px]">
+                <img src={projects[4].img} alt={projects[4].title} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[50%_50%] transition-transform duration-700 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/10 to-transparent" />
+                <p className="absolute bottom-5 left-5 text-lg font-bold text-white">{projects[4].title}</p>
+              </motion.a>
+              <motion.a
+                href="https://heyimartin.framer.ai/"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ y: -4, scale: 1.02 }}
+                className="mx-auto inline-flex h-14 items-center justify-center gap-2 rounded-full bg-black px-8 text-sm font-semibold text-white shadow-[0_20px_60px_rgba(0,0,0,0.18)]"
               >
-                View Portfolio
-                <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-primary transition-colors duration-200">
-                  <ArrowRight className="w-3 h-3 text-white -rotate-45" />
-                </div>
-              </a>
-            </motion.div>
+                Explore Portfolio <ArrowRight className="h-4 w-4 -rotate-45 text-primary" />
+              </motion.a>
+            </div>
 
-            {/* Card 4 — E-Commerce Luma, h=500 (tallest) */}
-            <motion.a
-              href="https://heyimartin.framer.ai/" target="_blank" rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.75, delay: 0.20, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -6 }}
-              className="relative flex-shrink-0 rounded-[1.75rem] overflow-hidden cursor-pointer group"
-              style={{ width: 240, height: 500 }}
-            >
-              <img src={projects[3].img} alt={projects[3].title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-              <div className="absolute inset-0 p-5 flex flex-col justify-between">
-                <div className="flex items-start justify-between">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/60 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">{projects[3].tag}</span>
-                  <div className="w-8 h-8 rounded-full bg-white/15 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-colors duration-300">
-                    <ArrowRight className="w-3.5 h-3.5 text-white -rotate-45" />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-white/40 font-mono text-[10px] tracking-widest uppercase mb-1">Project 04</p>
-                  <h4 className="text-white font-bold text-xl leading-tight">{projects[3].title}</h4>
-                </div>
-              </div>
+            <motion.a href="https://heyimartin.framer.ai/" target="_blank" rel="noopener noreferrer" whileHover={{ y: -8 }} className="group relative h-[440px] overflow-hidden rounded-[1.75rem] md:h-[370px]">
+              <img src={projects[3].img} alt={projects[3].title} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[50%_54%] transition-transform duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/5 to-transparent" />
+              <p className="absolute bottom-5 left-5 text-xl font-bold text-white">{projects[3].title}</p>
             </motion.a>
 
-            {/* Card 5 — Motion Reel, h=420, primary accent */}
-            <motion.a
-              href="https://heyimartin.framer.ai/" target="_blank" rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.75, delay: 0.27, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -6 }}
-              className="relative flex-shrink-0 rounded-[1.75rem] overflow-hidden cursor-pointer group"
-              style={{ width: 230, height: 420 }}
-            >
-              <img src={projects[2].img} alt={projects[2].title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(214,66,56,0.85) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)" }} />
-              <div className="absolute inset-0 p-5 flex flex-col justify-between">
-                <div className="flex items-start justify-between">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/70 bg-white/15 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">{projects[2].tag}</span>
-                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center group-hover:bg-primary transition-colors duration-300">
-                    <ArrowRight className="w-3.5 h-3.5 text-black group-hover:text-white -rotate-45 transition-colors duration-300" />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-white/60 font-mono text-[10px] tracking-widest uppercase mb-1">Project 03</p>
-                  <h4 className="text-white font-bold text-xl leading-tight">{projects[2].title}</h4>
-                </div>
-              </div>
-            </motion.a>
-
-            {/* Card 6 — Web Platform Sync, h=380 */}
-            <motion.a
-              href="https://heyimartin.framer.ai/" target="_blank" rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.75, delay: 0.34, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -6 }}
-              className="relative flex-shrink-0 rounded-[1.75rem] overflow-hidden cursor-pointer group"
-              style={{ width: 250, height: 380 }}
-            >
-              <img src={projects[5].img} alt={projects[5].title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-              <div className="absolute inset-0 p-5 flex flex-col justify-between">
-                <div className="flex items-start justify-between">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/60 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">{projects[5].tag}</span>
-                  <div className="w-8 h-8 rounded-full bg-white/15 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-colors duration-300">
-                    <ArrowRight className="w-3.5 h-3.5 text-white -rotate-45" />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-white/40 font-mono text-[10px] tracking-widest uppercase mb-1">Project 06</p>
-                  <h4 className="text-white font-bold text-xl leading-tight">{projects[5].title}</h4>
-                </div>
-              </div>
-            </motion.a>
-
+            <div className="grid gap-5">
+              <motion.a href="https://heyimartin.framer.ai/" target="_blank" rel="noopener noreferrer" whileHover={{ y: -8 }} className="group relative h-72 overflow-hidden rounded-[1.75rem] md:h-[300px]">
+                <img src={projects[5].img} alt={projects[5].title} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[50%_48%] transition-transform duration-700 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/5 to-transparent" />
+                <p className="absolute bottom-5 left-5 text-lg font-bold text-white">{projects[5].title}</p>
+              </motion.a>
+              <motion.div className="relative h-40 overflow-hidden rounded-[1.75rem] bg-black p-6 text-white md:h-[140px]">
+                <p className="text-5xl font-black leading-none">50+</p>
+                <p className="mt-2 text-sm text-white/55">Premium projects delivered</p>
+              </motion.div>
+            </div>
           </div>
         </div>
       </motion.section>
@@ -1023,18 +962,18 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-2.5">
               <div className="flex flex-col gap-2.5">
                 <motion.div style={{ y: testiCol1Y, height: 180 }} className="rounded-2xl overflow-hidden bg-black/5">
-                  <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=280&auto=format&fit=crop&q=80" className="w-full h-full object-cover" alt="" />
+                  <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=280&auto=format&fit=crop&q=80" loading="lazy" decoding="async" className="w-full h-full object-cover" alt="" />
                 </motion.div>
                 <motion.div style={{ y: testiCol1Y, height: 110 }} className="rounded-2xl overflow-hidden bg-black/5">
-                  <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=280&auto=format&fit=crop&q=80" className="w-full h-full object-cover" alt="" />
+                  <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=280&auto=format&fit=crop&q=80" loading="lazy" decoding="async" className="w-full h-full object-cover" alt="" />
                 </motion.div>
               </div>
               <div className="flex flex-col gap-2.5 mt-8">
                 <motion.div style={{ y: testiCol2Y, height: 110 }} className="rounded-2xl overflow-hidden bg-black/5">
-                  <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=280&auto=format&fit=crop&q=80" className="w-full h-full object-cover" alt="" />
+                  <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=280&auto=format&fit=crop&q=80" loading="lazy" decoding="async" className="w-full h-full object-cover" alt="" />
                 </motion.div>
                 <motion.div style={{ y: testiCol2Y, height: 180 }} className="rounded-2xl overflow-hidden bg-black/5">
-                  <img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=280&auto=format&fit=crop&q=80" className="w-full h-full object-cover" alt="" />
+                  <img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=280&auto=format&fit=crop&q=80" loading="lazy" decoding="async" className="w-full h-full object-cover" alt="" />
                 </motion.div>
               </div>
             </div>
@@ -1052,18 +991,18 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-2.5">
               <div className="flex flex-col gap-2.5 mt-8">
                 <motion.div style={{ y: testiCol2Y, height: 110 }} className="rounded-2xl overflow-hidden bg-black/5">
-                  <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=280&auto=format&fit=crop&q=80" className="w-full h-full object-cover" alt="" />
+                  <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=280&auto=format&fit=crop&q=80" loading="lazy" decoding="async" className="w-full h-full object-cover" alt="" />
                 </motion.div>
                 <motion.div style={{ y: testiCol2Y, height: 180 }} className="rounded-2xl overflow-hidden bg-black/5">
-                  <img src="https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=280&auto=format&fit=crop&q=80" className="w-full h-full object-cover" alt="" />
+                  <img src="https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=280&auto=format&fit=crop&q=80" loading="lazy" decoding="async" className="w-full h-full object-cover" alt="" />
                 </motion.div>
               </div>
               <div className="flex flex-col gap-2.5">
                 <motion.div style={{ y: testiCol3Y, height: 180 }} className="rounded-2xl overflow-hidden bg-black/5">
-                  <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=280&auto=format&fit=crop&q=80" className="w-full h-full object-cover" alt="" />
+                  <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=280&auto=format&fit=crop&q=80" loading="lazy" decoding="async" className="w-full h-full object-cover" alt="" />
                 </motion.div>
                 <motion.div style={{ y: testiCol3Y, height: 110 }} className="rounded-2xl overflow-hidden bg-black/5">
-                  <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=280&auto=format&fit=crop&q=80" className="w-full h-full object-cover" alt="" />
+                  <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=280&auto=format&fit=crop&q=80" loading="lazy" decoding="async" className="w-full h-full object-cover" alt="" />
                 </motion.div>
               </div>
             </div>
@@ -1368,9 +1307,12 @@ export default function Home() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8 }}
             style={{
-              background: activeProduct === 0
-                ? "radial-gradient(ellipse 70% 55% at 70% 50%, rgba(214,66,56,0.07) 0%, transparent 70%)"
-                : "radial-gradient(ellipse 70% 55% at 30% 50%, rgba(214,66,56,0.07) 0%, transparent 70%)",
+              background:
+                activeProduct === 0
+                  ? "radial-gradient(ellipse 70% 55% at 70% 50%, rgba(214,66,56,0.07) 0%, transparent 70%)"
+                  : activeProduct === 1
+                    ? "radial-gradient(ellipse 70% 55% at 30% 50%, rgba(214,66,56,0.07) 0%, transparent 70%)"
+                    : "radial-gradient(ellipse 72% 58% at 52% 42%, rgba(214,66,56,0.08) 0%, transparent 72%)",
             }}
           />
         </AnimatePresence>
@@ -1413,13 +1355,13 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex items-center gap-2 mb-10 p-1 bg-white/[0.04] border border-white/[0.07] rounded-2xl w-fit"
+            className="mb-10 flex w-fit max-w-full flex-wrap items-center gap-2 rounded-2xl border border-white/[0.07] bg-white/[0.04] p-1"
           >
             {inkaaProducts.map((p, i) => (
               <button
                 key={p.id}
                 onClick={() => setActiveProduct(i)}
-                className="relative px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors duration-200 focus:outline-none"
+                className="relative rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors duration-200 focus:outline-none"
                 style={{ color: activeProduct === i ? "#030303" : "rgba(255,255,255,0.45)" }}
               >
                 {activeProduct === i && (
@@ -1945,27 +1887,27 @@ export default function Home() {
             style={{ y: formY, opacity: formOpacity }}
             className="bg-card p-8 md:p-12 rounded-[2rem] border border-border shadow-xl"
           >
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">Full Name *</label>
-                  <input {...register("fullName")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" placeholder="John Doe" />
-                  {errors.fullName && <span className="text-xs text-destructive">{errors.fullName.message as string}</span>}
+                  <label htmlFor="fullName" className="text-sm font-semibold text-foreground">Full Name *</label>
+                  <input id="fullName" autoComplete="name" aria-invalid={Boolean(errors.fullName)} aria-describedby={errors.fullName ? "fullName-error" : undefined} {...register("fullName")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" placeholder="John Doe" />
+                  {errors.fullName && <span id="fullName-error" className="text-xs text-destructive">{errors.fullName.message as string}</span>}
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">Email *</label>
-                  <input type="email" {...register("email")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" placeholder="john@example.com" />
-                  {errors.email && <span className="text-xs text-destructive">{errors.email.message as string}</span>}
+                  <label htmlFor="email" className="text-sm font-semibold text-foreground">Email *</label>
+                  <input id="email" type="email" autoComplete="email" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "email-error" : undefined} {...register("email")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" placeholder="john@example.com" />
+                  {errors.email && <span id="email-error" className="text-xs text-destructive">{errors.email.message as string}</span>}
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-foreground">Company Name</label>
-                <input {...register("company")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" placeholder="Acme Corp (Optional)" />
+                <label htmlFor="company" className="text-sm font-semibold text-foreground">Company Name</label>
+                <input id="company" autoComplete="organization" {...register("company")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" placeholder="Acme Corp (Optional)" />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">Service Needed *</label>
-                  <select {...register("service")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none">
+                  <label htmlFor="service" className="text-sm font-semibold text-foreground">Service Needed *</label>
+                  <select id="service" aria-invalid={Boolean(errors.service)} aria-describedby={errors.service ? "service-error" : undefined} {...register("service")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none">
                     <option value="">Select Service...</option>
                     <option value="UI/UX Design">UI/UX Design</option>
                     <option value="Website Design">Website Design</option>
@@ -1973,35 +1915,35 @@ export default function Home() {
                     <option value="Motion Design">Motion & Visual Design</option>
                     <option value="Other">Other</option>
                   </select>
-                  {errors.service && <span className="text-xs text-destructive">{errors.service.message as string}</span>}
+                  {errors.service && <span id="service-error" className="text-xs text-destructive">{errors.service.message as string}</span>}
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">Budget Range *</label>
-                  <select {...register("budget")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none">
+                  <label htmlFor="budget" className="text-sm font-semibold text-foreground">Budget Range *</label>
+                  <select id="budget" aria-invalid={Boolean(errors.budget)} aria-describedby={errors.budget ? "budget-error" : undefined} {...register("budget")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none">
                     <option value="">Select Budget...</option>
                     <option value="< ₹50k">Under ₹50,000</option>
                     <option value="₹50k - ₹1L">₹50,000 - ₹1,00,000</option>
                     <option value="₹1L - ₹3L">₹1,00,000 - ₹3,00,000</option>
                     <option value="₹3L+">₹3,00,000+</option>
                   </select>
-                  {errors.budget && <span className="text-xs text-destructive">{errors.budget.message as string}</span>}
+                  {errors.budget && <span id="budget-error" className="text-xs text-destructive">{errors.budget.message as string}</span>}
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-foreground">Timeline *</label>
-                <select {...register("timeline")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none">
+                <label htmlFor="timeline" className="text-sm font-semibold text-foreground">Timeline *</label>
+                <select id="timeline" aria-invalid={Boolean(errors.timeline)} aria-describedby={errors.timeline ? "timeline-error" : undefined} {...register("timeline")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none">
                   <option value="">Select Timeline...</option>
                   <option value="ASAP">ASAP (Rush)</option>
                   <option value="1-2 Months">1-2 Months</option>
                   <option value="3+ Months">3+ Months</option>
                   <option value="Flexible">Flexible</option>
                 </select>
-                {errors.timeline && <span className="text-xs text-destructive">{errors.timeline.message as string}</span>}
+                {errors.timeline && <span id="timeline-error" className="text-xs text-destructive">{errors.timeline.message as string}</span>}
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-foreground">Project Details *</label>
-                <textarea {...register("details")} rows={4} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none" placeholder="Tell me about your project, goals, and expectations..." />
-                {errors.details && <span className="text-xs text-destructive">{errors.details.message as string}</span>}
+                <label htmlFor="details" className="text-sm font-semibold text-foreground">Project Details *</label>
+                <textarea id="details" aria-invalid={Boolean(errors.details)} aria-describedby={errors.details ? "details-error" : undefined} {...register("details")} rows={4} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none" placeholder="Tell me about your project, goals, and expectations..." />
+                {errors.details && <span id="details-error" className="text-xs text-destructive">{errors.details.message as string}</span>}
               </div>
               <Button type="submit" size="lg" className="w-full rounded-xl h-14 text-base font-semibold bg-foreground text-background hover:bg-primary hover:text-white transition-colors duration-300">
                 Send Inquiry
@@ -2037,7 +1979,7 @@ export default function Home() {
                 transition={{ duration: 0.7 }}
                 className="flex items-center gap-4 mb-6"
               >
-                <img src={inkaaLogo} alt="Inkaa Studio" className="w-16 h-16 rounded-2xl" />
+                <img src={inkaaLogo} alt="Inkaa Studio" loading="lazy" decoding="async" className="w-16 h-16 rounded-2xl" />
                 <span className="font-bold text-3xl tracking-tight">inkaa.</span>
               </motion.div>
               <motion.p

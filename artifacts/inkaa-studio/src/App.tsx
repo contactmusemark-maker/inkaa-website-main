@@ -8,6 +8,7 @@ import Home from "@/pages/Home";
 import SplashScreen from "@/components/SplashScreen";
 import { LenisProvider } from "@/components/LenisProvider";
 import VignetteTransition from "@/components/VignetteTransition";
+import AnimeCinematicEffects from "@/components/AnimeCinematicEffects";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ function App() {
       <TooltipProvider>
         <LenisProvider>
           <VignetteTransition />
+          {splashDone && <AnimeCinematicEffects />}
           {!splashDone && <SplashScreen onDone={handleDone} />}
           <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
             <Router />

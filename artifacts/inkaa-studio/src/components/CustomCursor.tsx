@@ -18,6 +18,7 @@ export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const visibleRef = useRef(false);
 
   useEffect(() => {
     const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
@@ -28,11 +29,20 @@ export default function CustomCursor() {
       cursorY.set(e.clientY);
       trailX.set(e.clientX);
       trailY.set(e.clientY);
-      if (!isVisible) setIsVisible(true);
+      if (!visibleRef.current) {
+        visibleRef.current = true;
+        setIsVisible(true);
+      }
     };
 
-    const handleEnter = () => setIsVisible(true);
-    const handleLeave = () => setIsVisible(false);
+    const handleEnter = () => {
+      visibleRef.current = true;
+      setIsVisible(true);
+    };
+    const handleLeave = () => {
+      visibleRef.current = false;
+      setIsVisible(false);
+    };
     const handleDown = () => setIsClicking(true);
     const handleUp = () => setIsClicking(false);
 
@@ -72,7 +82,7 @@ export default function CustomCursor() {
       document.removeEventListener("mouseout", handleHoverEnd);
       document.body.style.cursor = "";
     };
-  }, [cursorX, cursorY, trailX, trailY, isVisible]);
+  }, [cursorX, cursorY, trailX, trailY]);
 
   return (
     <>
