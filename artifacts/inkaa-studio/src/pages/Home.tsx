@@ -464,10 +464,31 @@ export default function Home() {
       <BookCallButton />
 
       {/* ── Global scroll progress bar ── */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-[2px] bg-primary origin-left z-[100]"
-        style={{ scaleX: progressBarScale }}
-      />
+      <div className="fixed top-0 left-0 right-0 z-[100] pointer-events-none">
+        {/* Track */}
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-white/[0.06]" />
+        {/* Filled bar with glow */}
+        <motion.div
+          className="absolute top-0 left-0 h-[2px] origin-left"
+          style={{
+            scaleX: progressBarScale,
+            background: "linear-gradient(90deg, #b32d24 0%, #d64238 55%, #ff6b5e 100%)",
+            boxShadow: "0 0 8px rgba(214,66,56,0.7), 0 0 20px rgba(214,66,56,0.35)",
+            width: "100%",
+          }}
+        />
+        {/* Leading-edge bright dot */}
+        <motion.div
+          className="absolute top-0 w-[5px] h-[5px] rounded-full -translate-y-[1.5px]"
+          style={{
+            left: 0,
+            x: useTransform(progressBarScale, (s) => `calc(${Math.min(s, 0.9999) * 100}% - 2.5px)`),
+            background: "#fff",
+            boxShadow: "0 0 6px 2px rgba(214,66,56,0.9), 0 0 12px 4px rgba(214,66,56,0.5)",
+            opacity: useTransform(progressBarScale, [0, 0.01, 0.99, 1], [0, 1, 1, 0]),
+          }}
+        />
+      </div>
 
       {/* ── 1. Nav ── */}
       <motion.nav
