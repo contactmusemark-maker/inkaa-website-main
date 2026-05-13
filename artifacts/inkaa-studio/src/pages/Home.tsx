@@ -288,9 +288,7 @@ function TestimonialCard({ t, delay = 0 }: { t: typeof testimonials[0]; delay?: 
   );
 }
 
-/* ── Cinematic Scroll Storytelling — GSAP 3D rotateX scrub ── */
-gsap.registerPlugin(ScrollTrigger);
-
+/* ── Cinematic Phrase Section — pure Framer Motion, no GSAP conflicts ── */
 const cinematicPhrases = [
   { text: "Design is the Language of the Future.", accent: false },
   { text: "Every Pixel Has Purpose.", accent: true },
@@ -299,112 +297,41 @@ const cinematicPhrases = [
 ];
 
 function CinematicScrollSection() {
-  const sectionRef = React.useRef<HTMLElement>(null);
-
-  React.useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const ctx = gsap.context(() => {
-      const phrases = section.querySelectorAll<HTMLElement>(".cp-phrase");
-
-      phrases.forEach((phrase) => {
-        const words = phrase.querySelectorAll<HTMLElement>(".cp-word");
-
-        gsap.set(words, {
-          rotateX: 90,
-          opacity: 0,
-          transformOrigin: "50% 100%",
-          transformPerspective: 900,
-        });
-
-        gsap.to(words, {
-          rotateX: 0,
-          opacity: 1,
-          stagger: 0.07,
-          duration: 1,
-          ease: "back.out(1.3)",
-          scrollTrigger: {
-            trigger: phrase,
-            start: "top 82%",
-            end: "top 35%",
-            scrub: 1.4,
-          },
-        });
-      });
-
-      gsap.fromTo(
-        ".cp-ambient-orb",
-        { scale: 0.6, opacity: 0 },
-        {
-          scale: 1.2,
-          opacity: 1,
-          scrollTrigger: {
-            trigger: section,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 2,
-          },
-        }
-      );
-    }, section);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section
-      ref={sectionRef}
-      id="cinematic"
-      className="relative bg-[#030303] overflow-hidden py-0"
-      style={{ perspective: "1200px" }}
-    >
+    <section id="cinematic" className="relative bg-[#030303] overflow-hidden">
       {/* Ambient orb */}
       <div
-        className="cp-ambient-orb absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(214,66,56,0.10) 0%, transparent 65%)",
-          filter: "blur(80px)",
-        }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(214,66,56,0.09) 0%, transparent 65%)", filter: "blur(80px)" }}
       />
-
-      {/* Depth grid lines */}
+      {/* Grid lines */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        className="absolute inset-0 pointer-events-none opacity-[0.025]"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(214,66,56,1) 1px, transparent 1px), linear-gradient(90deg, rgba(214,66,56,1) 1px, transparent 1px)",
+          backgroundImage: "linear-gradient(rgba(214,66,56,1) 1px, transparent 1px), linear-gradient(90deg, rgba(214,66,56,1) 1px, transparent 1px)",
           backgroundSize: "80px 80px",
         }}
       />
-
-      <div className="relative z-10" style={{ transformStyle: "preserve-3d" }}>
+      <div className="relative z-10">
         {cinematicPhrases.map((item, i) => (
-          <div
+          <motion.div
             key={i}
-            className={`cp-phrase border-b border-white/[0.04] flex items-center min-h-[30vh] px-8 md:px-20 ${
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10%" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className={`border-b border-white/[0.04] flex items-center min-h-[28vh] px-8 md:px-20 ${
               i % 2 === 1 ? "justify-end" : "justify-start"
             }`}
-            style={{ transformStyle: "preserve-3d" }}
           >
             <p
               className={`text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter leading-[1.05] max-w-5xl ${
                 item.accent ? "text-primary" : "text-white"
               }`}
-              style={{ transformStyle: "preserve-3d" }}
             >
-              {item.text.split(" ").map((word, j) => (
-                <span
-                  key={j}
-                  className="cp-word inline-block mr-[0.25em] last:mr-0"
-                  style={{ transformStyle: "preserve-3d" }}
-                >
-                  {word}
-                </span>
-              ))}
+              {item.text}
             </p>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

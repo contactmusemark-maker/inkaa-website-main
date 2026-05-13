@@ -66,9 +66,7 @@ export default function GSAPScrollScene() {
         start: "top top",
         end: `+=${totalScrollLength}%`,
         scrub: 1.8,
-        pin: stage,
-        pinSpacing: true,
-        anticipatePin: 1,
+        // No pin — CSS sticky handles the pinning
         onUpdate: (self) => {
           const sceneIndex = Math.round(self.progress * (panels.length - 1));
           indicators.forEach((dot, i) => {
@@ -87,24 +85,12 @@ export default function GSAPScrollScene() {
 
       tl.to(
         panels[i - 1],
-        {
-          opacity: 0,
-          rotateX: -18,
-          z: 600,
-          duration: 1,
-          ease: "power2.inOut",
-        },
+        { opacity: 0, rotateX: -18, z: 600, duration: 1, ease: "power2.inOut" },
         (i - 1) * 1
       ).fromTo(
         panel,
         { opacity: 0, rotateX: 28, z: -900 },
-        {
-          opacity: 1,
-          rotateX: 0,
-          z: 0,
-          duration: 1,
-          ease: "power3.out",
-        },
+        { opacity: 1, rotateX: 0, z: 0, duration: 1, ease: "power3.out" },
         (i - 1) * 1 + 0.35
       );
 
@@ -113,14 +99,7 @@ export default function GSAPScrollScene() {
 
       tl.to(
         words,
-        {
-          opacity: 1,
-          rotateX: 0,
-          z: 0,
-          stagger: 0.04,
-          duration: 0.6,
-          ease: "back.out(1.5)",
-        },
+        { opacity: 1, rotateX: 0, z: 0, stagger: 0.04, duration: 0.6, ease: "back.out(1.5)" },
         (i - 1) * 1 + 0.5
       );
     });
@@ -129,13 +108,7 @@ export default function GSAPScrollScene() {
     if (firstWords?.length) {
       gsap.set(firstWords, { opacity: 0, rotateX: 60, z: -200, transformPerspective: 800, transformOrigin: "50% 100%" });
       gsap.to(firstWords, {
-        opacity: 1,
-        rotateX: 0,
-        z: 0,
-        stagger: 0.07,
-        duration: 0.9,
-        ease: "back.out(1.4)",
-        delay: 0.3,
+        opacity: 1, rotateX: 0, z: 0, stagger: 0.07, duration: 0.9, ease: "back.out(1.4)", delay: 0.3,
       });
     }
 
@@ -158,10 +131,11 @@ export default function GSAPScrollScene() {
   }, []);
 
   return (
-    <div ref={outerRef} style={{ height: `${scenes.length * 100}vh` }} className="relative">
+    <div ref={outerRef} style={{ height: `${scenes.length * 100}vh`, position: "relative" }}>
+      {/* CSS sticky — no GSAP pin, avoids Lenis conflict */}
       <div
         ref={stageRef}
-        className="w-full h-screen bg-[#030303] overflow-hidden relative flex items-center justify-center"
+        className="sticky top-0 w-full h-screen bg-[#030303] overflow-hidden flex items-center justify-center"
         style={{ transformStyle: "preserve-3d" }}
       >
         {/* Depth grid floor */}
@@ -224,14 +198,12 @@ export default function GSAPScrollScene() {
               className="gsap3d-panel absolute inset-0 flex flex-col items-center justify-center px-8 text-center"
               style={{ transformStyle: "preserve-3d" }}
             >
-              {/* Scene number */}
               <div className="mb-6">
                 <span className="font-mono text-[11px] uppercase tracking-[0.4em] text-white/20">
                   {scene.num} / 0{scenes.length}
                 </span>
               </div>
 
-              {/* Headline */}
               <h2
                 className="font-black tracking-tighter leading-[0.9] mb-8"
                 style={{
@@ -249,7 +221,6 @@ export default function GSAPScrollScene() {
                 ))}
               </h2>
 
-              {/* Body text */}
               <p
                 className="gsap3d-word max-w-lg text-base md:text-xl font-light leading-relaxed text-white/45"
                 style={{ transformStyle: "preserve-3d" }}
@@ -257,7 +228,6 @@ export default function GSAPScrollScene() {
                 {scene.body}
               </p>
 
-              {/* Bottom decorative line */}
               <div className="gsap3d-word mt-10 flex items-center gap-4">
                 <div className="w-12 h-[1px] bg-primary/40" />
                 <span className="font-mono text-[9px] tracking-[0.4em] uppercase text-white/15">
