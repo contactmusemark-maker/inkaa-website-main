@@ -112,8 +112,7 @@ export default function ServicesScrollScene() {
       ScrollTrigger.create({
         trigger: container,
         start: "top top",
-        end: `+=${(n - 1) * 100}vh`,
-        pin: sticky,
+        end: "bottom bottom",
         scrub: 1.4,
         onUpdate: (self) => {
           const raw = self.progress * (n - 1);
@@ -151,7 +150,7 @@ export default function ServicesScrollScene() {
   }, []);
 
   return (
-    <div ref={containerRef} id="services" style={{ height: `${services.length * 100}vh` }}>
+    <div ref={containerRef} id="services" style={{ height: `${services.length * 100}vh`, position: "relative" }}>
       <div
         ref={stickyRef}
         className="sticky top-0 h-screen w-full bg-[#0a0a0a] flex flex-col items-center justify-center overflow-hidden"

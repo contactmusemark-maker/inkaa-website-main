@@ -104,8 +104,7 @@ export default function ProcessScrollScene() {
       ScrollTrigger.create({
         trigger: container,
         start: "top top",
-        end: `+=${(n - 1) * 100}vh`,
-        pin: sticky,
+        end: "bottom bottom",
         scrub: 1.4,
         onUpdate: (self) => {
           const raw = self.progress * (n - 1);
@@ -145,7 +144,7 @@ export default function ProcessScrollScene() {
   }, []);
 
   return (
-    <div ref={containerRef} id="process" style={{ height: `${steps.length * 100}vh` }}>
+    <div ref={containerRef} id="process" style={{ height: `${steps.length * 100}vh`, position: "relative" }}>
       <div
         ref={stickyRef}
         className="sticky top-0 h-screen w-full bg-[#f5f5f5] flex flex-col items-center justify-center overflow-hidden px-6"
