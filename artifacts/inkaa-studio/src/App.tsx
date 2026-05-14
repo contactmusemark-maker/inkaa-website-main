@@ -1,16 +1,13 @@
 import { useState, useCallback } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import SplashScreen from "@/components/SplashScreen";
 import { LenisProvider } from "@/components/LenisProvider";
 import VignetteTransition from "@/components/VignetteTransition";
 import AnimeCinematicEffects from "@/components/AnimeCinematicEffects";
-
-const queryClient = new QueryClient();
+import ErrorBoundary from "@/components/ErrorBoundary";
+import Analytics from "@/components/Analytics";
 
 function Router() {
   return (
@@ -26,19 +23,17 @@ function App() {
   const handleDone = useCallback(() => setSplashDone(true), []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <LenisProvider>
-          <VignetteTransition />
-          {splashDone && <AnimeCinematicEffects />}
-          {!splashDone && <SplashScreen onDone={handleDone} />}
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <Router />
-          </WouterRouter>
-          <Toaster />
-        </LenisProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <LenisProvider>
+        <Analytics />
+        <VignetteTransition />
+        {splashDone && <AnimeCinematicEffects />}
+        {!splashDone && <SplashScreen onDone={handleDone} />}
+        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+          <Router />
+        </WouterRouter>
+      </LenisProvider>
+    </ErrorBoundary>
   );
 }
 

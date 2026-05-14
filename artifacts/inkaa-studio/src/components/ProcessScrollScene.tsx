@@ -103,11 +103,17 @@ export default function ProcessScrollScene() {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: "+=2800",
-            scrub: 1,
+            end: "+=2550",
+            scrub: 0.9,
             pin: true,
             anticipatePin: 1,
-            snap: 1 / (steps.length - 1),
+            fastScrollEnd: true,
+            snap: {
+              snapTo: 1 / (steps.length - 1),
+              duration: { min: 0.2, max: 0.42 },
+              delay: 0.04,
+              ease: "power2.out",
+            },
             invalidateOnRefresh: true,
             onUpdate: (self) => {
               const nextIndex = Math.round(self.progress * (steps.length - 1));
@@ -126,8 +132,8 @@ export default function ProcessScrollScene() {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: "+=2800",
-            scrub: 1.6,
+            end: "+=2550",
+            scrub: 1.25,
           },
         });
 
@@ -137,8 +143,8 @@ export default function ProcessScrollScene() {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: "+=2800",
-            scrub: 1.35,
+            end: "+=2550",
+            scrub: 1.15,
           },
         });
       });
@@ -191,7 +197,7 @@ export default function ProcessScrollScene() {
       </div>
 
       <div className="relative hidden min-h-screen items-center md:flex">
-        <div className="pointer-events-none absolute -right-10 top-2 z-0 font-mono text-[10vw] font-black leading-none tracking-normal text-black/[0.018]">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-10 top-2 z-0 font-mono text-[10vw] font-black leading-none tracking-normal text-black/[0.018]">
           Map
         </div>
 

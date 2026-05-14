@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Phone } from "lucide-react";
 
 export default function BookCallButton() {
   const [visible, setVisible] = useState(false);
+  const shouldReduce = useReducedMotion();
 
   useEffect(() => {
     const hero = document.querySelector("#hero-sentinel");
@@ -30,12 +31,18 @@ export default function BookCallButton() {
           transition={{ type: "spring", damping: 20, stiffness: 300 }}
           className="fixed bottom-6 right-6 z-[9990]"
         >
-          {/* Pulse rings */}
-          <span className="absolute inset-0 rounded-full bg-primary/30 animate-ping" style={{ animationDuration: "2s" }} />
-          <span className="absolute inset-0 rounded-full bg-primary/20 animate-ping" style={{ animationDuration: "2s", animationDelay: "0.5s" }} />
+          {!shouldReduce && (
+            <motion.span
+              aria-hidden="true"
+              className="absolute inset-[-10px] rounded-full bg-primary/20 blur-md"
+              animate={{ opacity: [0.2, 0.42, 0.2], scale: [0.96, 1.08, 0.96] }}
+              transition={{ duration: 3.8, ease: "easeInOut", repeat: Infinity }}
+            />
+          )}
 
           <motion.a
             href="#inquiry"
+            aria-label="Book a call with Inkaa Studio"
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
             className="relative flex items-center gap-2 bg-primary text-white font-semibold text-sm px-5 py-3.5 rounded-full shadow-2xl shadow-primary/40 hover:bg-primary/90 transition-colors duration-200"

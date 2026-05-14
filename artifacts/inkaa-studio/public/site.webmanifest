@@ -1,0 +1,18 @@
+{
+  "name": "Inkaa Studio",
+  "short_name": "Inkaa",
+  "description": "Cinematic branding, UI/UX, web design, and motion-led digital experiences.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

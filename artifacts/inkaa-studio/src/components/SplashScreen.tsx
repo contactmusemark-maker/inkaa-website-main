@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const MESSAGES = [
-  "INITIALIZING WORKSPACE...",
-  "LOADING ASSETS...",
-  "RENDERING COMPONENTS...",
-  "APPLYING DESIGN SYSTEM...",
-  "MOUNTING EXPERIENCE...",
-  "READY.",
+  "SETTING THE STAGE...",
+  "TUNING THE LIGHT...",
+  "WARMING THE MOTION...",
+  "COMPOSING THE FRAME...",
+  "OPENING THE STUDIO...",
+  "WELCOME.",
 ];
 
-const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&";
+const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 function ScrambleText({ text, active }: { text: string; active: boolean }) {
   const [display, setDisplay] = useState(text);
@@ -29,9 +29,9 @@ function ScrambleText({ text, active }: { text: string; active: boolean }) {
           })
           .join("")
       );
-      iteration += 0.5;
+      iteration += 0.42;
       if (iteration >= text.length) clearInterval(interval);
-    }, 30);
+    }, 38);
     return () => clearInterval(interval);
   }, [text, active]);
 
@@ -39,14 +39,22 @@ function ScrambleText({ text, active }: { text: string; active: boolean }) {
 }
 
 export default function SplashScreen({ onDone }: { onDone: () => void }) {
+  const [hasSeenSplash] = useState(() => {
+    try {
+      return window.sessionStorage.getItem("inkaa:splash-seen") === "true";
+    } catch {
+      return false;
+    }
+  });
   const [progress, setProgress] = useState(0);
   const [msgIdx, setMsgIdx] = useState(0);
   const [done, setDone] = useState(false);
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
+    const shouldReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const start = performance.now();
-    const duration = 2600;
+    const duration = shouldReduce ? 320 : hasSeenSplash ? 900 : 2250;
 
     const raf = requestAnimationFrame(function step(now) {
       const elapsed = now - start;
@@ -54,24 +62,42 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
       setProgress(p);
       setMsgIdx(Math.min(MESSAGES.length - 1, Math.floor((p / 100) * MESSAGES.length)));
       if (p < 100) requestAnimationFrame(step);
-      else setTimeout(() => setDone(true), 300);
+      else {
+        try {
+          window.sessionStorage.setItem("inkaa:splash-seen", "true");
+        } catch {
+          // Session storage can be unavailable in some privacy modes.
+        }
+        setTimeout(() => setDone(true), shouldReduce || hasSeenSplash ? 120 : 240);
+      }
     });
 
-    const tickInterval = setInterval(() => setTick((t) => t + 1), 80);
+    const tickInterval = setInterval(() => setTick((t) => t + 1), shouldReduce ? 160 : 90);
 
     return () => {
       cancelAnimationFrame(raf);
       clearInterval(tickInterval);
     };
-  }, []);
+  }, [hasSeenSplash]);
 
   useEffect(() => {
     if (done) {
-      const t = setTimeout(onDone, 700);
+      const t = setTimeout(onDone, hasSeenSplash ? 320 : 620);
       return () => clearTimeout(t);
     }
     return undefined;
-  }, [done, onDone]);
+  }, [done, hasSeenSplash, onDone]);
+
+  function skipIntro() {
+    try {
+      window.sessionStorage.setItem("inkaa:splash-seen", "true");
+    } catch {
+      // Session storage can be unavailable in some privacy modes.
+    }
+    setProgress(100);
+    setMsgIdx(MESSAGES.length - 1);
+    setDone(true);
+  }
 
   return (
     <AnimatePresence>
@@ -104,15 +130,15 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
 
           {/* Top-left system info */}
           <div className="absolute top-8 left-12 text-[10px] font-mono text-white/20 space-y-1">
-            <div>SYS_INIT v2.4.1</div>
-            <div>ENV: PRODUCTION</div>
+            <div>SCENE 01</div>
+            <div>MOOD: CINEMATIC</div>
             <div>USER: VISITOR_{String(tick % 999).padStart(3, "0")}</div>
           </div>
 
           {/* Top-right timestamp */}
           <div className="absolute top-8 right-12 text-[10px] font-mono text-white/20 text-right space-y-1">
             <div>INKAA.STUDIO</div>
-            <div>{new Date().toISOString().slice(0, 19).replace("T", " ")}</div>
+            <div>LIVING DIGITAL EXPERIENCE</div>
             <div className="flex items-center gap-1 justify-end">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
               <span>LIVE</span>
@@ -189,6 +215,14 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
               SECURE CONNECTION
             </span>
           </div>
+
+          <button
+            type="button"
+            onClick={skipIntro}
+            className="absolute bottom-20 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-white/[0.035] px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-white/38 transition-colors hover:border-primary/40 hover:text-white focus-visible:text-white"
+          >
+            Skip Intro
+          </button>
         </motion.div>
       )}
     </AnimatePresence>

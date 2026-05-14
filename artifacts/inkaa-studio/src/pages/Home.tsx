@@ -5,11 +5,12 @@ import {
   useScroll,
   useTransform,
   useSpring,
+  useMotionValue,
   useInView,
   useReducedMotion,
   MotionValue,
 } from "framer-motion";
-import { ArrowRight, Menu, Star, ChevronRight, Search, Palette, Code2, Rocket, Bot, Wand2, Layers, Zap, PenTool, Image, Sun, Pen, Monitor, Plus, Minus, Phone, MessageCircle } from "lucide-react";
+import { ArrowRight, Menu, X, Star, ChevronRight, Search, Palette, Code2, Rocket, Bot, Wand2, Layers, Zap, PenTool, Image, Sun, Pen, Monitor, Plus, Minus, Phone, MessageCircle } from "lucide-react";
 import { SiInstagram, SiX, SiFigma, SiFramer, SiGithub, SiOpenai, SiGsap } from "react-icons/si";
 import CustomCursor from "@/components/CustomCursor";
 import ServicesScrollScene from "@/components/ServicesScrollScene";
@@ -119,7 +120,7 @@ const coreServices = [
   { title: "Branding & Identity", price: "₹12,000+", img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=900&auto=format&fit=crop&q=80", tag: "Branding" },
   { title: "Graphic Design", price: "₹5,000+", img: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=900&auto=format&fit=crop&q=80", tag: "Visual" },
   { title: "Creative Direction", price: "₹20,000+", img: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?w=900&auto=format&fit=crop&q=80", tag: "Direction" },
-  { title: "Motion Design", price: "₹18,000+", img: "https://images.unsplash.com/photo-1574717024453-354056aefa63?w=900&auto=format&fit=crop&q=80", tag: "Motion" },
+  { title: "Motion Design", price: "₹18,000+", img: "https://plus.unsplash.com/premium_photo-1681426317576-18cf057e9bb1?w=900&auto=format&fit=crop&q=80", tag: "Motion" },
 ];
 
 const addOnServices = [
@@ -132,8 +133,8 @@ const addOnServices = [
 
 const projects = [
   { title: "Brand Refresh — Arka Co.", tag: "Branding", colSpan: "col-span-1 md:col-span-2", rowSpan: "row-span-2", img: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1200&auto=format&fit=crop&q=80", speed: -0.15 },
-  { title: "App UI — NexPay", tag: "UI/UX", colSpan: "col-span-1", rowSpan: "row-span-1", img: "https://images.unsplash.com/photo-1616469829935-c2f53c1c82ed?w=800&auto=format&fit=crop&q=80", speed: 0.1 },
-  { title: "Motion Reel — Inkaa", tag: "Motion", colSpan: "col-span-1", rowSpan: "row-span-1", img: "https://images.unsplash.com/photo-1574717024453-354056aefa63?w=800&auto=format&fit=crop&q=80", speed: -0.1 },
+  { title: "App UI — NexPay", tag: "UI/UX", colSpan: "col-span-1", rowSpan: "row-span-1", img: "https://images.unsplash.com/photo-1650636353551-1275516077b6?w=900&auto=format&fit=crop&q=80", speed: 0.1 },
+  { title: "Motion Reel — Inkaa", tag: "Motion", colSpan: "col-span-1", rowSpan: "row-span-1", img: "https://images.unsplash.com/photo-1625982569853-b736fcc84f12?w=900&auto=format&fit=crop&q=80", speed: -0.1 },
   { title: "E-Commerce — Luma", tag: "Web", colSpan: "col-span-1", rowSpan: "row-span-2", img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80", speed: 0.2 },
   { title: "Web Platform — Sync", tag: "Development", colSpan: "col-span-1 md:col-span-2", rowSpan: "row-span-1", img: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=1200&auto=format&fit=crop&q=80", speed: -0.05 },
   { title: "Creative Direction — Vibe", tag: "Direction", colSpan: "col-span-1", rowSpan: "row-span-1", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&auto=format&fit=crop&q=80", speed: 0.15 },
@@ -189,7 +190,93 @@ const inkaaProducts = [
     badge: "Software",
     status: "Coming Soon",
   },
+  {
+    id: "pos",
+    tab: "inkaa POS",
+    name: "inkaa.",
+    nameAccent: "POS",
+    tagline: "AI-powered retail billing platform.",
+    url: "pos.inkaastudio.com",
+    href: "https://pos.inkaastudio.com",
+    description: "A modern point-of-sale platform for fast billing, inventory clarity, payment workflows, and multi-store retail visibility from one calm operating layer.",
+    features: ["Smart Billing", "GST Invoices", "Inventory Tracking", "QR Payments", "Sales Analytics", "Multi-store Support"],
+    accent: "#e34a40",
+    badge: "Retail",
+    status: "Coming Soon",
+  },
+  {
+    id: "retailos",
+    tab: "inkaa RetailOS",
+    name: "inkaa.",
+    nameAccent: "RetailOS",
+    tagline: "Enterprise retail operations OS.",
+    url: "retailos.inkaastudio.com",
+    href: "https://retailos.inkaastudio.com",
+    description: "A connected retail command system for supply chains, warehouses, vendors, procurement teams, logistics, and executive analytics across every store layer.",
+    features: ["Supply Chain", "Warehouse Tracking", "Vendor Management", "Procurement", "Retail Analytics", "Logistics Dashboard"],
+    accent: "#cf3d35",
+    badge: "Operations",
+    status: "Coming Soon",
+  },
+  {
+    id: "talentos",
+    tab: "inkaa TalentOS",
+    name: "inkaa.",
+    nameAccent: "TalentOS",
+    tagline: "AI-powered talent and workforce OS.",
+    url: "talentos.inkaastudio.com",
+    href: "https://talentos.inkaastudio.com",
+    description: "A workforce intelligence platform for recruitment, payroll, attendance, performance, employee journeys, and HR analytics in one refined workspace.",
+    features: ["AI Recruitment", "Payroll Intelligence", "Attendance Tracking", "Employee Lifecycle", "Performance Reviews", "HR Analytics"],
+    accent: "#d64238",
+    badge: "Workforce",
+    status: "Coming Soon",
+  },
+  {
+    id: "clinicos",
+    tab: "inkaa ClinicOS",
+    name: "inkaa.",
+    nameAccent: "ClinicOS",
+    tagline: "Modern clinic operations system.",
+    url: "clinicos.inkaastudio.com",
+    href: "https://clinicos.inkaastudio.com",
+    description: "A focused clinic operating layer for appointments, records, prescriptions, telemedicine, billing, and daily doctor workflows.",
+    features: ["Appointments", "Patient Records", "Prescriptions", "Telemedicine", "Billing", "Doctor Dashboard"],
+    accent: "#e04a41",
+    badge: "Clinic",
+    status: "Coming Soon",
+  },
+  {
+    id: "healthcare",
+    tab: "inkaa Healthcare",
+    name: "inkaa.",
+    nameAccent: "Healthcare",
+    tagline: "Enterprise healthcare ecosystem platform.",
+    url: "healthcare.inkaastudio.com",
+    href: "https://healthcare.inkaastudio.com",
+    description: "An enterprise healthcare ecosystem built for hospital workflows, medical intelligence, insurance operations, diagnostics, staff management, and health records.",
+    features: ["Hospital Workflows", "Medical Analytics", "Insurance Management", "AI Diagnostics", "Staff Management", "Health Records"],
+    accent: "#f05249",
+    badge: "Healthcare",
+    status: "Coming Soon",
+  },
+  {
+    id: "flow",
+    tab: "inkaa Flow",
+    name: "inkaa.",
+    nameAccent: "Flow",
+    tagline: "AI productivity intelligence platform.",
+    url: "flow.inkaastudio.com",
+    href: "https://flow.inkaastudio.com",
+    description: "A focused productivity intelligence platform with desktop tracking, AI workflow insights, focus analytics, team visibility, and smart automation.",
+    features: ["Productivity Tracking", "Windows Installer", "AI Workflow Insights", "Focus Analytics", "Team Monitoring", "Smart Automation"],
+    accent: "#ff5a4f",
+    badge: "AI Platform",
+    status: "Coming Soon",
+  },
 ];
+
+type InkaaProduct = (typeof inkaaProducts)[number];
 
 const testimonials = [
   { name: "Sarah J.", company: "Arka Co.", text: "Moses transformed our entire digital presence. Absolute visionary.", rating: 5 },
@@ -257,7 +344,7 @@ function ParallaxCard({
           <h4 className="text-2xl md:text-3xl font-bold text-white drop-shadow-md leading-tight">
             {project.title}
           </h4>
-          <div className="mt-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-400">
+          <div className="mt-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
             <span className="inline-flex items-center gap-1 text-xs font-semibold text-white/80 hover:text-primary transition-colors">
               View Case Study <ChevronRight className="w-3 h-3" />
             </span>
@@ -268,6 +355,440 @@ function ParallaxCard({
   );
 }
 
+function ProductDashboardPreview({ product }: { product: InkaaProduct }) {
+  const isFlow = product.id === "flow";
+  const heatCells = Array.from({ length: 30 }, (_, i) => i);
+
+  return (
+    <motion.div
+      key={`${product.id}-preview`}
+      initial={{ opacity: 0, y: 18, scale: 0.98, filter: "blur(8px)" }}
+      animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+      exit={{ opacity: 0, y: -10, scale: 0.98, filter: "blur(6px)" }}
+      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+      className="relative mb-10 overflow-hidden rounded-2xl border border-white/[0.08] bg-black/35 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.28)]"
+    >
+      <div className="pointer-events-none absolute inset-0" style={{ background: `radial-gradient(circle at 22% 18%, ${product.accent}26, transparent 34%)` }} />
+      <div className="relative z-10 mb-5 flex items-center justify-between">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-white/28">Live Preview</p>
+          <p className="mt-1 text-sm font-semibold text-white/76">{product.nameAccent} Console</p>
+        </div>
+        <motion.span
+          className="h-3 w-3 rounded-full"
+          style={{ backgroundColor: product.accent, boxShadow: `0 0 26px ${product.accent}99` }}
+          animate={{ scale: [1, 1.45, 1], opacity: [0.75, 1, 0.75] }}
+          transition={{ duration: isFlow ? 1.6 : 2.4, ease: "easeInOut", repeat: Infinity }}
+        />
+      </div>
+
+      {isFlow ? (
+        <div className="relative z-10 grid gap-4">
+          <div className="flex h-28 items-end gap-2 rounded-xl border border-white/[0.06] bg-white/[0.035] p-4">
+            {[38, 62, 48, 78, 55, 88, 70, 94, 76, 86].map((height, i) => (
+              <motion.span
+                key={i}
+                className="flex-1 rounded-t-md"
+                style={{ background: `linear-gradient(180deg, ${product.accent}, rgba(255,255,255,0.12))` }}
+                animate={{ height: [`${height * 0.72}%`, `${height}%`, `${height * 0.82}%`] }}
+                transition={{ duration: 1.7 + i * 0.08, delay: i * 0.05, ease: "easeInOut", repeat: Infinity }}
+              />
+            ))}
+          </div>
+          <div className="grid grid-cols-10 gap-1.5">
+            {heatCells.map((cell) => (
+              <motion.span
+                key={cell}
+                className="aspect-square rounded-[5px] border border-white/[0.04]"
+                style={{ backgroundColor: cell % 5 === 0 ? product.accent : "rgba(255,255,255,0.08)" }}
+                animate={{ opacity: [0.34, cell % 4 === 0 ? 1 : 0.58, 0.34] }}
+                transition={{ duration: 2.1, delay: cell * 0.025, repeat: Infinity, ease: "easeInOut" }}
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="relative z-10 grid gap-3">
+          {[product.features[0], product.features[1], product.features[2]].map((feature, i) => (
+            <motion.div
+              key={feature}
+              className="flex items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.04] px-4 py-3"
+              initial={{ opacity: 0, x: 18 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.45, delay: i * 0.08 }}
+            >
+              <span className="text-xs text-white/58">{feature}</span>
+              <span className="h-1.5 w-16 overflow-hidden rounded-full bg-white/10">
+                <motion.span
+                  className="block h-full rounded-full"
+                  style={{ backgroundColor: product.accent }}
+                  initial={{ width: "18%" }}
+                  animate={{ width: `${64 + i * 11}%` }}
+                  transition={{ duration: 0.8, delay: 0.16 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                />
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+type EcosystemNode = {
+  Icon: typeof Bot;
+  id: string;
+  label: string;
+  revealIndex: number;
+};
+
+function EcosystemConnection({
+  active,
+  center,
+  index,
+  node,
+  progress,
+  radius,
+  shouldReduce,
+}: {
+  active: boolean;
+  center: { x: number; y: number };
+  index: number;
+  node: EcosystemNode;
+  progress: MotionValue<number>;
+  radius: number;
+  shouldReduce: boolean;
+}) {
+  const angle = (Math.PI * 2 * index) / inkaaProducts.length - Math.PI / 2;
+  const x = center.x + Math.cos(angle) * radius;
+  const y = center.y + Math.sin(angle) * radius;
+  const curve = index % 2 === 0 ? 42 : -42;
+  const midX = (center.x + x) / 2 + Math.cos(angle + Math.PI / 2) * curve;
+  const midY = (center.y + y) / 2 + Math.sin(angle + Math.PI / 2) * curve;
+  const path = `M ${center.x} ${center.y} Q ${midX} ${midY} ${x} ${y}`;
+  const revealStart = 0.28 + node.revealIndex * 0.052;
+  const lineProgress = useTransform(progress, [revealStart, revealStart + 0.09], [0, 1]);
+  const lineOpacity = useTransform(progress, [revealStart, revealStart + 0.05, 0.92], [0, 0.65, 1]);
+  const flowOpacity = useTransform(progress, [0.66, 0.78, 1], [0.16, 0.68, 0.9]);
+
+  return (
+    <g>
+      <motion.path
+        d={path}
+        fill="none"
+        stroke={active ? "rgba(214,66,56,0.78)" : "rgba(214,66,56,0.28)"}
+        strokeWidth={active ? 1.8 : 1}
+        strokeDasharray="7 10"
+        filter={active ? "url(#ecosystem-line-glow)" : undefined}
+        style={{ pathLength: lineProgress, opacity: lineOpacity }}
+      />
+      <motion.path
+        d={path}
+        fill="none"
+        stroke="rgba(214,66,56,0.72)"
+        strokeWidth={active ? 2.1 : 1.35}
+        strokeLinecap="round"
+        strokeDasharray="1 34"
+        filter="url(#ecosystem-line-glow)"
+        animate={shouldReduce ? {} : { strokeDashoffset: [0, -70] }}
+        style={{ opacity: flowOpacity }}
+        transition={{ duration: 3.4, delay: index * 0.08, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.circle
+        cx={center.x}
+        cy={center.y}
+        r={active ? 4 : 3}
+        fill="rgba(214,66,56,0.95)"
+        filter="url(#ecosystem-line-glow)"
+        animate={
+          shouldReduce
+            ? {}
+            : {
+                cx: [center.x, midX, x],
+                cy: [center.y, midY, y],
+                opacity: [0, active ? 1 : 0.64, 0],
+              }
+        }
+        transition={{ duration: 2.8, delay: index * 0.18, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.circle
+        cx={x}
+        cy={y}
+        r={active ? 13 : 9}
+        fill="url(#ecosystem-endpoint)"
+        animate={shouldReduce ? {} : { opacity: active ? [0.42, 0.9, 0.42] : [0.2, 0.42, 0.2], scale: active ? [0.9, 1.12, 0.9] : [0.92, 1.04, 0.92] }}
+        style={{ opacity: lineOpacity }}
+        transition={{ duration: 2.6, delay: index * 0.06, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </g>
+  );
+}
+
+function EcosystemProductNode({
+  active,
+  index,
+  node,
+  onHover,
+  onLeave,
+  progress,
+}: {
+  active: boolean;
+  index: number;
+  node: EcosystemNode;
+  onHover: () => void;
+  onLeave: () => void;
+  progress: MotionValue<number>;
+}) {
+  const angle = (Math.PI * 2 * index) / inkaaProducts.length - Math.PI / 2;
+  const left = 50 + Math.cos(angle) * 38;
+  const top = 50 + Math.sin(angle) * 38;
+  const revealStart = 0.3 + node.revealIndex * 0.052;
+  const opacity = useTransform(progress, [revealStart, revealStart + 0.055], [0, 1]);
+  const scale = useTransform(progress, [revealStart, revealStart + 0.07, 0.86], [0.72, 1, 1.03]);
+  const blur = useTransform(progress, [revealStart, revealStart + 0.06], ["blur(8px)", "blur(0px)"]);
+  const Icon = node.Icon;
+
+  return (
+    <motion.div
+      className="absolute z-10 w-[86px] -translate-x-1/2 -translate-y-1/2 sm:w-[116px]"
+      style={{ left: `${left}%`, top: `${top}%`, opacity, scale, filter: blur }}
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+    >
+      <motion.div
+        className="relative flex flex-col items-center gap-1.5 rounded-2xl border border-white/[0.09] bg-white/[0.065] px-2.5 py-3 text-center text-[10px] font-semibold text-white/74 shadow-[0_18px_70px_rgba(0,0,0,0.26)] backdrop-blur-2xl transition-colors hover:border-primary/50 hover:bg-white/[0.085] hover:text-white sm:px-4 sm:py-4 sm:text-xs"
+        whileHover={{ scale: 1.08, y: -5 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <motion.span
+          className="grid h-8 w-8 place-items-center rounded-full border border-primary/25 bg-black/50 text-primary sm:h-10 sm:w-10"
+          animate={{ boxShadow: active ? "0 0 42px rgba(214,66,56,0.54)" : "0 0 18px rgba(214,66,56,0.18)" }}
+          transition={{ duration: 0.3 }}
+        >
+          <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+        </motion.span>
+        <span className="leading-tight">{node.label}</span>
+        <span className="absolute right-3 top-3 h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_14px_rgba(214,66,56,0.8)]" />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function ProductEcosystemSection() {
+  const shouldReduce = useReducedMotion();
+  const storyProgress = useMotionValue(1);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const smoothMouseX = useSpring(mouseX, { stiffness: 80, damping: 22 });
+  const smoothMouseY = useSpring(mouseY, { stiffness: 80, damping: 22 });
+  const [hoveredNode, setHoveredNode] = React.useState<number | null>(null);
+  const ecosystemIcons = [Bot, Monitor, Layers, Zap, Code2, Search, PenTool, Plus, Wand2];
+  const revealOrder = ["marketing", "campus", "peopleos", "pos", "clinicos", "healthcare", "flow", "retailos", "talentos"];
+  const nodes = inkaaProducts.map((product, index) => ({
+    label: product.nameAccent,
+    id: product.id,
+    Icon: ecosystemIcons[index % ecosystemIcons.length],
+    revealIndex: revealOrder.indexOf(product.id),
+  }));
+  const center = { x: 500, y: 500 };
+  const radius = 355;
+  const introOpacity = useTransform(storyProgress, [0, 0.08, 0.22], [0, 1, 1]);
+  const introY = useTransform(storyProgress, [0, 0.12], [28, 0]);
+  const mapOpacity = useTransform(storyProgress, [0.08, 0.2], [0, 1]);
+  const mapScale = useTransform(storyProgress, [0.08, 0.28, 0.92, 1], [0.94, 1, 1.02, 0.99]);
+  const hubScale = useTransform(storyProgress, [0.1, 0.28, 1], [0.98, 1, 1]);
+  const hubGlow = useTransform(storyProgress, [0, 1], [0.22, 0.28]);
+  const mapRotateX = useTransform(smoothMouseY, [-1, 1], [2.2, -2.2]);
+  const mapRotateY = useTransform(smoothMouseX, [-1, 1], [-2.2, 2.2]);
+  const mapDepthX = useTransform(smoothMouseX, [-1, 1], [-10, 10]);
+  const mapDepthY = useTransform(smoothMouseY, [-1, 1], [-8, 8]);
+
+  const handleMapMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    mouseX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 2);
+    mouseY.set(((event.clientY - bounds.top) / bounds.height - 0.5) * 2);
+  };
+
+  const handleMapMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  return (
+    <section className="relative overflow-hidden bg-[#030303] py-24 text-white md:py-32">
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        animate={shouldReduce ? {} : { opacity: [0.84, 1, 0.84] }}
+        transition={{ duration: 7.5, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          background:
+            "radial-gradient(circle at 50% 42%, rgba(214,66,56,0.16), transparent 32%), radial-gradient(circle at 20% 20%, rgba(255,255,255,0.05), transparent 24%), linear-gradient(180deg,#030303,#070303)",
+        }}
+      />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.042] [background-image:linear-gradient(rgba(255,255,255,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.18)_1px,transparent_1px)] [background-size:72px_72px]" />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.055] [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:20px_20px]" />
+      <div className="relative z-10 px-6">
+        <div className="container relative mx-auto max-w-7xl">
+          <motion.div
+            style={{ opacity: introOpacity, y: introY }}
+            className="mb-12 text-center"
+          >
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.35em] text-primary">Ecosystem</p>
+            <h3 className="text-4xl font-black tracking-tighter md:text-6xl">One Connected Ecosystem</h3>
+            <p className="mx-auto mt-5 max-w-xl text-sm font-light leading-relaxed text-white/38">
+              Every Inkaa platform is designed as part of one intelligent operating layer for modern teams, creators, retailers, clinics, and businesses.
+            </p>
+          </motion.div>
+
+        <motion.div
+          onMouseMove={handleMapMouseMove}
+          onMouseLeave={handleMapMouseLeave}
+          style={{
+            opacity: mapOpacity,
+            scale: mapScale,
+            rotateX: mapRotateX,
+            rotateY: mapRotateY,
+            x: mapDepthX,
+            y: mapDepthY,
+            transformPerspective: 1200,
+          }}
+          className="relative mx-auto aspect-square max-h-[760px] min-h-[430px] w-full max-w-[980px] overflow-hidden rounded-[2rem] border border-white/[0.07] bg-white/[0.025] p-4 shadow-[0_40px_160px_rgba(0,0,0,0.38)] backdrop-blur-xl sm:min-h-[560px] md:p-8"
+        >
+          <div className="pointer-events-none absolute inset-5 rounded-[1.5rem] border border-white/[0.04] md:inset-8" />
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[38%] w-[38%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/15"
+            animate={shouldReduce ? {} : { rotate: 360 }}
+            transition={{ duration: 42, repeat: Infinity, ease: "linear" }}
+            style={{
+              background: "conic-gradient(from 90deg, transparent, rgba(214,66,56,0.16), transparent 34%, rgba(255,255,255,0.08), transparent 72%)",
+              boxShadow: "0 0 90px rgba(214,66,56,0.08), inset 0 0 70px rgba(214,66,56,0.05)",
+            }}
+          />
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[62%] w-[62%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-white/[0.055]"
+            animate={shouldReduce ? {} : { rotate: -360 }}
+            transition={{ duration: 68, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[24%] w-[24%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl"
+            animate={shouldReduce ? {} : { scale: [0.98, 1.04, 0.98] }}
+            style={{ opacity: 0.2 }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <filter id="ecosystem-line-glow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <radialGradient id="ecosystem-endpoint" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="rgba(255,255,255,0.95)" />
+                <stop offset="42%" stopColor="rgba(214,66,56,0.9)" />
+                <stop offset="100%" stopColor="rgba(214,66,56,0)" />
+              </radialGradient>
+            </defs>
+            {nodes.map((node, i) => (
+              <EcosystemConnection
+                key={node.id}
+                active={hoveredNode === i}
+                center={center}
+                index={i}
+                node={node}
+                progress={storyProgress}
+                radius={radius}
+                shouldReduce={Boolean(shouldReduce)}
+              />
+            ))}
+          </svg>
+
+          <motion.div
+            className="absolute left-1/2 top-1/2 z-20 grid h-28 w-28 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-primary/20 bg-white/[0.05] shadow-[0_0_70px_rgba(214,66,56,0.18)] backdrop-blur-2xl will-change-transform sm:h-36 sm:w-36"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            style={{ scale: hubScale }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <motion.span
+              aria-hidden="true"
+              className="absolute inset-[-16px] rounded-full border border-primary/12 bg-primary/[0.025] blur-[0.2px]"
+              style={{ opacity: hubGlow }}
+              animate={shouldReduce ? {} : { scale: [1, 1.035, 1] }}
+              transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.span
+              aria-hidden="true"
+              className="absolute inset-[-28px] rounded-full border border-dashed border-white/[0.055]"
+              animate={shouldReduce ? {} : { rotate: 360 }}
+              transition={{ duration: 96, repeat: Infinity, ease: "linear" }}
+            />
+            <motion.span
+              aria-hidden="true"
+              className="absolute inset-[-44px] rounded-full border border-primary/[0.045]"
+              animate={shouldReduce ? {} : { rotate: -360 }}
+              transition={{ duration: 140, repeat: Infinity, ease: "linear" }}
+            />
+            <span className="absolute inset-3 rounded-full bg-black/80 shadow-[inset_0_0_34px_rgba(255,255,255,0.055)]" />
+            <span className="absolute inset-6 rounded-full bg-primary/[0.035] blur-xl" />
+            <img src="/ecosystem-logo.png" alt="Inkaa Studio" className="relative z-10 h-16 w-16 rounded-2xl object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.12)] sm:h-20 sm:w-20" />
+          </motion.div>
+
+          {nodes.map((node, i) => (
+            <EcosystemProductNode
+              key={node.id}
+              active={hoveredNode === i}
+              index={i}
+              node={node}
+              onHover={() => setHoveredNode(i)}
+              onLeave={() => setHoveredNode(null)}
+              progress={storyProgress}
+            />
+          ))}
+
+          {[0, 1, 2, 3].map((ring) => (
+            <motion.span
+              key={`ambient-ring-${ring}`}
+              aria-hidden="true"
+              className="pointer-events-none absolute left-1/2 top-1/2 rounded-full border border-primary/10"
+              style={{
+                height: `${18 + ring * 16}%`,
+                width: `${18 + ring * 16}%`,
+                translateX: "-50%",
+                translateY: "-50%",
+              }}
+              animate={shouldReduce ? {} : { scale: [0.96, 1.04, 0.96], opacity: [0.08, 0.22, 0.08] }}
+              transition={{ duration: 5.2 + ring, delay: ring * 0.6, repeat: Infinity, ease: "easeInOut" }}
+            />
+          ))}
+
+          {[0, 1, 2, 3, 4, 5].map((particle) => (
+            <motion.span
+              key={particle}
+              aria-hidden="true"
+              className="pointer-events-none absolute h-1 w-1 rounded-full bg-primary/70 shadow-[0_0_18px_rgba(214,66,56,0.8)]"
+              animate={{
+                left: ["50%", `${18 + particle * 12}%`, "50%"],
+                top: ["50%", `${22 + ((particle * 17) % 58)}%`, "50%"],
+                opacity: [0, 0.55, 0],
+              }}
+              transition={{ duration: 6 + particle * 0.4, delay: particle * 0.55, repeat: Infinity, ease: "easeInOut" }}
+            />
+          ))}
+
+        </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
 /* ── Testimonial card ── */
 function TestimonialCard({ t, delay = 0 }: { t: typeof testimonials[0]; delay?: number }) {
   const ref = useRef(null);
@@ -303,13 +824,9 @@ export default function Home() {
   const shouldReduce = useReducedMotion();
   const [activeSection, setActiveSection] = React.useState("about");
   const [faqOpenIdx, setFaqOpenIdx] = React.useState<number | null>(0);
-  const [scrolled, setScrolled] = React.useState(false);
   const [activeProduct, setActiveProduct] = React.useState(0);
-  React.useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 80);
-    window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
+  const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
+  const activeProductData = inkaaProducts[activeProduct];
 
   React.useEffect(() => {
     const ids = navLinks.map((l) => l.id);
@@ -457,60 +974,106 @@ export default function Home() {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-4 left-4 right-4 z-50 px-6 h-14 flex items-center justify-between bg-white/90 backdrop-blur-xl rounded-2xl border border-black/8 shadow-[0_8px_32px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.06)]"
+        className="fixed top-4 left-4 right-4 z-50 bg-white/90 backdrop-blur-xl rounded-2xl border border-black/8 shadow-[0_8px_32px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.06)]"
       >
-        {/* Logo */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.15 }}
-          className="flex items-center gap-2.5 flex-shrink-0"
-        >
-          <img src={inkaaLogo} alt="Inkaa Studio Logo" loading="eager" decoding="async" className="w-8 h-8 rounded-full" />
-          <span className="font-bold text-lg tracking-tight text-black">inkaa.</span>
-        </motion.div>
+        <div className="flex h-14 items-center justify-between px-6">
+          {/* Logo */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.15 }}
+            className="flex items-center gap-2.5 flex-shrink-0"
+          >
+            <img src={inkaaLogo} alt="Inkaa Studio Logo" loading="eager" decoding="async" className="w-8 h-8 rounded-full" />
+            <span className="font-bold text-lg tracking-tight text-black">inkaa.</span>
+          </motion.div>
 
-        {/* Center nav */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="hidden md:flex items-center gap-0.5 bg-black/[0.05] rounded-full p-1"
-        >
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={`#${link.id}`}
-              className="relative px-4 py-1.5 rounded-full text-sm font-medium block"
+          {/* Center nav */}
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="hidden md:flex items-center gap-0.5 bg-black/[0.05] rounded-full p-1"
+          >
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={`#${link.id}`}
+                aria-current={activeSection === link.id ? "page" : undefined}
+                className="relative px-4 py-1.5 rounded-full text-sm font-medium block"
+              >
+                {activeSection === link.id && (
+                  <motion.div
+                    layoutId="nav-active"
+                    className="absolute inset-0 bg-black rounded-full shadow-sm"
+                    transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                  />
+                )}
+                <span className={`relative z-10 transition-colors duration-200 ${activeSection === link.id ? "text-white" : "text-black/55 hover:text-black/80"}`}>
+                  {link.name}
+                </span>
+              </a>
+            ))}
+          </motion.div>
+
+          {/* Right */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="flex items-center gap-3"
+          >
+            <Button asChild className="hidden md:flex rounded-full px-5 h-9 text-sm font-semibold border border-black/20 bg-transparent text-black hover:bg-black hover:text-white transition-all duration-300">
+              <a href="#inquiry">Start a Project</a>
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="text-black/60 hover:text-black md:hidden"
+              aria-label={mobileNavOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={mobileNavOpen}
+              onClick={() => setMobileNavOpen((open) => !open)}
             >
-              {activeSection === link.id && (
-                <motion.div
-                  layoutId="nav-active"
-                  className="absolute inset-0 bg-black rounded-full shadow-sm"
-                  transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                />
-              )}
-              <span className={`relative z-10 transition-colors duration-200 ${activeSection === link.id ? "text-white" : "text-black/55 hover:text-black/80"}`}>
-                {link.name}
-              </span>
-            </a>
-          ))}
-        </motion.div>
+              {mobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </Button>
+          </motion.div>
+        </div>
 
-        {/* Right */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="flex items-center gap-3"
-        >
-          <Button asChild className="hidden md:flex rounded-full px-5 h-9 text-sm font-semibold border border-black/20 bg-transparent text-black hover:bg-black hover:text-white transition-all duration-300">
-            <a href="#inquiry">Start a Project</a>
-          </Button>
-          <Button variant="ghost" size="icon" className="text-black/60 hover:text-black md:hidden">
-            <Menu className="w-5 h-5" />
-          </Button>
-        </motion.div>
+        <AnimatePresence>
+          {mobileNavOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0, filter: "blur(6px)" }}
+              animate={{ opacity: 1, height: "auto", filter: "blur(0px)" }}
+              exit={{ opacity: 0, height: 0, filter: "blur(6px)" }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              className="overflow-hidden border-t border-black/10 md:hidden"
+            >
+              <div className="grid grid-cols-2 gap-2 p-3">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.name}
+                    href={`#${link.id}`}
+                    aria-current={activeSection === link.id ? "page" : undefined}
+                    onClick={() => setMobileNavOpen(false)}
+                    className={`rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
+                      activeSection === link.id ? "bg-black text-white" : "bg-black/[0.04] text-black/62 hover:bg-black/[0.08] hover:text-black"
+                    }`}
+                  >
+                    {link.name}
+                  </a>
+                ))}
+                <a
+                  href="#inquiry"
+                  onClick={() => setMobileNavOpen(false)}
+                  className="col-span-2 rounded-xl bg-primary px-4 py-3 text-center text-sm font-semibold text-white"
+                >
+                  Start a Project
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.nav>
 
       {/* ── 2. Hero ── */}
@@ -1309,10 +1872,10 @@ export default function Home() {
             style={{
               background:
                 activeProduct === 0
-                  ? "radial-gradient(ellipse 70% 55% at 70% 50%, rgba(214,66,56,0.07) 0%, transparent 70%)"
+                  ? `radial-gradient(ellipse 70% 55% at 70% 50%, ${activeProductData.accent}16 0%, transparent 70%)`
                   : activeProduct === 1
-                    ? "radial-gradient(ellipse 70% 55% at 30% 50%, rgba(214,66,56,0.07) 0%, transparent 70%)"
-                    : "radial-gradient(ellipse 72% 58% at 52% 42%, rgba(214,66,56,0.08) 0%, transparent 72%)",
+                    ? `radial-gradient(ellipse 70% 55% at 30% 50%, ${activeProductData.accent}16 0%, transparent 70%)`
+                    : `radial-gradient(ellipse 72% 58% at 52% 42%, ${activeProductData.accent}18 0%, transparent 72%)`,
             }}
           />
         </AnimatePresence>
@@ -1355,20 +1918,23 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mb-10 flex w-fit max-w-full flex-wrap items-center gap-2 rounded-2xl border border-white/[0.07] bg-white/[0.04] p-1"
+            className="mb-10 flex w-full max-w-full items-center gap-2 overflow-x-auto rounded-2xl border border-white/[0.07] bg-white/[0.04] p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-2xl [scrollbar-width:none] md:w-fit md:flex-wrap"
           >
             {inkaaProducts.map((p, i) => (
               <button
+                type="button"
                 key={p.id}
                 onClick={() => setActiveProduct(i)}
-                className="relative rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors duration-200 focus:outline-none"
+                aria-pressed={activeProduct === i}
+                className="group relative shrink-0 rounded-xl px-5 py-2.5 text-sm font-semibold transition-[color,filter,transform] duration-300 hover:text-white hover:blur-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#030303]"
                 style={{ color: activeProduct === i ? "#030303" : "rgba(255,255,255,0.45)" }}
               >
                 {activeProduct === i && (
                   <motion.span
                     layoutId="product-tab-bg"
-                    className="absolute inset-0 bg-white rounded-xl"
-                    transition={{ type: "spring", bounce: 0.22, duration: 0.45 }}
+                    className="absolute inset-0 rounded-xl bg-white shadow-[0_0_38px_rgba(214,66,56,0.22)]"
+                    style={{ boxShadow: `0 0 38px ${p.accent}38` }}
+                    transition={{ type: "spring", bounce: 0.18, duration: 0.5 }}
                   />
                 )}
                 <span className="relative z-10">{p.tab}</span>
@@ -1386,7 +1952,8 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   exit={{ opacity: 0, y: -16, filter: "blur(6px)" }}
                   transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden border border-white/[0.07] bg-white/[0.02]"
+                  className="grid grid-cols-1 overflow-hidden rounded-3xl border border-white/[0.07] bg-white/[0.02] shadow-[0_40px_140px_rgba(0,0,0,0.35)] lg:grid-cols-2"
+                  style={{ boxShadow: `0 40px 140px rgba(0,0,0,0.35), 0 0 80px ${product.accent}12` }}
                 >
                   {/* Left — product info */}
                   <div className="p-10 md:p-14 flex flex-col justify-between gap-10">
@@ -1409,7 +1976,15 @@ export default function Home() {
                       {/* Product name */}
                       <h3 className="text-5xl md:text-6xl font-black tracking-tighter text-white leading-none mb-2">
                         {product.name}
-                        <span className="text-primary">{product.nameAccent}</span>
+                        <motion.span
+                          key={`${product.id}-accent`}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+                          style={{ color: product.accent }}
+                        >
+                          {product.nameAccent}
+                        </motion.span>
                       </h3>
 
                       {/* URL */}
@@ -1434,7 +2009,8 @@ export default function Home() {
                         href={product.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 bg-primary text-white font-semibold text-sm px-7 h-12 rounded-full hover:bg-primary/90 transition-colors duration-200"
+                        className="inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5"
+                        style={{ backgroundColor: product.accent, boxShadow: `0 18px 54px ${product.accent}30` }}
                       >
                         Explore {product.nameAccent} <ArrowRight className="w-4 h-4" />
                       </a>
@@ -1442,7 +2018,10 @@ export default function Home() {
                   </div>
 
                   {/* Right — features grid */}
-                  <div className="p-10 md:p-14 bg-white/[0.02] border-l border-white/[0.06] flex flex-col justify-center">
+                  <div className="flex flex-col justify-center border-l border-white/[0.06] bg-white/[0.02] p-10 md:p-14">
+                    <AnimatePresence mode="wait">
+                      <ProductDashboardPreview product={product} />
+                    </AnimatePresence>
                     <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/25 mb-7">
                       Key Features
                     </p>
@@ -1453,9 +2032,9 @@ export default function Home() {
                           initial={{ opacity: 0, x: 12 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.4, delay: fi * 0.07 }}
-                          className="flex items-center gap-3 bg-white/[0.04] border border-white/[0.06] rounded-xl px-4 py-3"
+                          className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.04] px-4 py-3 transition-transform duration-300 hover:-translate-y-0.5 hover:bg-white/[0.06]"
                         >
-                          <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                          <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full" style={{ backgroundColor: product.accent, boxShadow: `0 0 14px ${product.accent}90` }} />
                           <span className="text-white/70 text-sm font-light">{feat}</span>
                         </motion.div>
                       ))}
@@ -1474,6 +2053,8 @@ export default function Home() {
           </AnimatePresence>
         </div>
       </section>
+
+      <ProductEcosystemSection />
 
       {/* ── FAQ ── */}
       <section id="faq" className="py-28 px-6 bg-[#f7f7f7] relative overflow-hidden">
@@ -1521,6 +2102,8 @@ export default function Home() {
                     }`}
                   >
                     <button
+                      type="button"
+                      aria-expanded={isOpen}
                       className="w-full flex items-center justify-between px-6 py-5 text-left gap-4"
                       onClick={() => setFaqOpenIdx(isOpen ? null : i)}
                     >
@@ -2018,8 +2601,8 @@ export default function Home() {
               <h4 className="font-bold mb-6 uppercase tracking-widest text-xs text-background/40">Connect</h4>
               <ul className="flex flex-col gap-4">
                 <li><a href="mailto:mosesmartin@inkaastudio.com" className="hover:text-primary transition-colors">Email</a></li>
-                <li><a href="https://heyimartin.framer.ai/" className="hover:text-primary transition-colors">Portfolio</a></li>
-                <li><a href="https://buymeaprashant.com/inkaastudio" className="hover:text-primary transition-colors">Support</a></li>
+                <li><a href="https://heyimartin.framer.ai/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Portfolio</a></li>
+                <li><a href="https://buymeaprashant.com/inkaastudio" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Support</a></li>
               </ul>
             </motion.div>
 
@@ -2032,10 +2615,10 @@ export default function Home() {
             >
               <h4 className="font-bold mb-6 uppercase tracking-widest text-xs text-background/40">Socials</h4>
               <div className="flex gap-3">
-                <motion.a whileHover={{ scale: 1.15, backgroundColor: "rgb(214,66,56)" }} href="https://www.instagram.com/inkaastudio.in/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-background/10 flex items-center justify-center hover:text-white transition-colors">
+                <motion.a aria-label="Inkaa Studio on Instagram" whileHover={{ scale: 1.15, backgroundColor: "rgb(214,66,56)" }} href="https://www.instagram.com/inkaastudio.in/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-background/10 flex items-center justify-center hover:text-white transition-colors">
                   <SiInstagram className="w-4 h-4" />
                 </motion.a>
-                <motion.a whileHover={{ scale: 1.15, backgroundColor: "rgb(214,66,56)" }} href="https://x.com/inkaastudio" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-background/10 flex items-center justify-center hover:text-white transition-colors">
+                <motion.a aria-label="Inkaa Studio on X" whileHover={{ scale: 1.15, backgroundColor: "rgb(214,66,56)" }} href="https://x.com/inkaastudio" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-background/10 flex items-center justify-center hover:text-white transition-colors">
                   <SiX className="w-4 h-4" />
                 </motion.a>
               </div>

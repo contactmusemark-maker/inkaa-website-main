@@ -59,7 +59,7 @@ const services = [
     kicker: "Living interface",
     desc: "Scroll storytelling, micro-interactions, and motion systems that make brands feel alive.",
     details: ["Scroll animation direction", "Micro-interaction design", "Motion timing system", "Launch-ready specs"],
-    img: "https://images.unsplash.com/photo-1574717024453-354056aefa63?w=1400&auto=format&fit=crop&q=85",
+    img: "https://plus.unsplash.com/premium_photo-1681426317576-18cf057e9bb1?w=1400&auto=format&fit=crop&q=85",
   },
 ] as const;
 
@@ -91,9 +91,9 @@ function ServiceCard({ active, flipped, index, offset, onClick, service }: Servi
     const x = (event.clientX - rect.left) / rect.width - 0.5;
     const y = (event.clientY - rect.top) / rect.height - 0.5;
 
-    card.style.setProperty("--tilt-x", `${-y * 5}deg`);
-    card.style.setProperty("--tilt-y", `${x * 6}deg`);
-    image.style.transform = `translate3d(${x * -18}px, ${y * -18}px, 0) scale(${active ? 1.1 : 1.04})`;
+    card.style.setProperty("--tilt-x", `${-y * 4}deg`);
+    card.style.setProperty("--tilt-y", `${x * 5}deg`);
+    image.style.transform = `translate3d(${x * -14}px, ${y * -14}px, 0) scale(${active ? 1.095 : 1.035})`;
   }
 
   function handlePointerLeave() {
@@ -126,15 +126,15 @@ function ServiceCard({ active, flipped, index, offset, onClick, service }: Servi
     const x = event.clientX - rect.left - rect.width / 2;
     const y = event.clientY - rect.top - rect.height / 2;
 
-    button.style.transform = `translate3d(${x * 0.22}px, ${y * 0.28}px, 0)`;
+    button.style.transform = `translate3d(${x * 0.18}px, ${y * 0.2}px, 0)`;
   }
 
   const clampedOffset = Math.max(-3, Math.min(3, offset));
   const absOffset = Math.abs(clampedOffset);
-  const translateX = clampedOffset * 178;
-  const translateY = absOffset * 18 + (active ? -8 : 24);
-  const rotate = clampedOffset * 9;
-  const scale = active ? 1 : Math.max(0.72, 0.88 - absOffset * 0.04);
+  const translateX = clampedOffset * 164;
+  const translateY = absOffset * 14 + (active ? -6 : 18);
+  const rotate = clampedOffset * 7;
+  const scale = active ? 1 : Math.max(0.78, 0.9 - absOffset * 0.035);
 
   return (
     <article
@@ -142,6 +142,7 @@ function ServiceCard({ active, flipped, index, offset, onClick, service }: Servi
       data-service-card
       role="button"
       tabIndex={0}
+      aria-label={`${flipped ? "Hide" : "View"} details for ${service.title}`}
       aria-pressed={flipped}
       onClick={onClick}
       onKeyDown={(event) => {
@@ -150,14 +151,14 @@ function ServiceCard({ active, flipped, index, offset, onClick, service }: Servi
           onClick();
         }
       }}
-      className="group absolute left-1/2 top-1/2 h-[66vh] min-h-[520px] w-[min(72vw,420px)] cursor-pointer rounded-[1.75rem] outline-none transition-[opacity,filter,transform] duration-700 ease-out will-change-transform md:h-[68vh]"
+      className="group absolute left-1/2 top-1/2 h-[66vh] min-h-[520px] w-[min(72vw,420px)] cursor-pointer rounded-[1.75rem] outline-none transition-[opacity,filter,transform] duration-700 ease-out will-change-transform focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-4 focus-visible:ring-offset-black md:h-[68vh]"
       style={
         {
           "--tilt-x": "0deg",
           "--tilt-y": "0deg",
-          opacity: active ? 1 : Math.max(0.2, 0.56 - absOffset * 0.08),
-          filter: active ? "blur(0px)" : `grayscale(1) blur(${Math.min(4, absOffset * 1.2)}px)`,
-          transform: `translate3d(-50%, -50%, 0) translate3d(${translateX}px, ${translateY}px, ${active ? 80 : -absOffset * 70}px) rotate(${rotate}deg) scale(${scale})`,
+          opacity: active ? 1 : Math.max(0.28, 0.62 - absOffset * 0.07),
+          filter: active ? "blur(0px)" : `grayscale(1) blur(${Math.min(3.2, absOffset * 0.9)}px)`,
+          transform: `translate3d(-50%, -50%, 0) translate3d(${translateX}px, ${translateY}px, ${active ? 64 : -absOffset * 50}px) rotate(${rotate}deg) scale(${scale})`,
           zIndex: 20 - absOffset,
           pointerEvents: absOffset > 3 ? "none" : "auto",
         } as CSSProperties
@@ -291,6 +292,13 @@ function MobileServiceCard({ service, index }: { service: Service; index: number
         <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-primary">{service.tag}</p>
         <h3 className="text-3xl font-black leading-none tracking-normal text-white">{service.title}</h3>
         <p className="mt-4 text-sm leading-relaxed text-white/58">{service.desc}</p>
+        <a
+          href="#inquiry"
+          className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/10 px-4 py-2 text-xs font-semibold text-white/82 backdrop-blur-xl transition-colors hover:border-primary/45 hover:bg-primary hover:text-white"
+          aria-label={`Start a project for ${service.title}`}
+        >
+          Start Project <ArrowRight className="h-3.5 w-3.5" />
+        </a>
       </div>
     </motion.article>
   );
@@ -333,7 +341,7 @@ export default function ServicesScrollScene() {
 
         gsap.set("[data-service-panel]", { willChange: "transform" });
         gsap.set("[data-service-card]", { willChange: "transform, opacity, filter" });
-        gsap.set("[data-service-copy]", { transition: "opacity 650ms ease, transform 650ms cubic-bezier(0.16, 1, 0.3, 1)" });
+        gsap.set("[data-service-copy]", { transition: "opacity 720ms ease, transform 720ms cubic-bezier(0.16, 1, 0.3, 1)" });
 
         gsap.fromTo(
           heading.querySelectorAll("[data-heading-line]"),
@@ -342,14 +350,14 @@ export default function ServicesScrollScene() {
             yPercent: 0,
             opacity: 1,
             filter: "blur(0px)",
-            duration: 1.05,
-            stagger: 0.12,
+            duration: 0.95,
+            stagger: 0.1,
             ease: "power4.out",
             scrollTrigger: {
               trigger: section,
               start: "top 72%",
-              end: "top 28%",
-              scrub: 1,
+              end: "top 30%",
+              scrub: 0.85,
             },
           },
         );
@@ -360,11 +368,17 @@ export default function ServicesScrollScene() {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: "+=4000",
-            scrub: 1,
+            end: "+=3600",
+            scrub: 0.9,
             pin: true,
             anticipatePin: 1,
-            snap: 1 / (services.length - 1),
+            fastScrollEnd: true,
+            snap: {
+              snapTo: 1 / (services.length - 1),
+              duration: { min: 0.22, max: 0.48 },
+              delay: 0.03,
+              ease: "power2.out",
+            },
             invalidateOnRefresh: true,
             onUpdate: (self) => {
               const nextIndex = Math.round(self.progress * (services.length - 1));
@@ -472,7 +486,7 @@ export default function ServicesScrollScene() {
         </div>
 
         <div className="relative z-20 hidden min-h-screen items-center md:flex">
-          <div className="pointer-events-none absolute right-10 top-28 z-0 font-mono text-[12vw] font-black leading-none tracking-normal text-white/[0.035]">
+          <div aria-hidden="true" className="pointer-events-none absolute right-10 top-28 z-0 font-mono text-[12vw] font-black leading-none tracking-normal text-white/[0.035]">
             Explore
           </div>
 

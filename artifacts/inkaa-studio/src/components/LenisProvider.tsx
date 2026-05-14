@@ -16,12 +16,13 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const shouldReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isTouch = window.matchMedia("(pointer: coarse)").matches;
     const lenis = new Lenis({
-      duration: shouldReduce ? 0 : 1.65,
+      duration: shouldReduce ? 0 : isTouch ? 1.05 : 1.38,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: !shouldReduce,
-      wheelMultiplier: 0.78,
-      touchMultiplier: 1.25,
+      wheelMultiplier: 0.84,
+      touchMultiplier: 1.08,
     });
 
     lenisRef.current = lenis;
