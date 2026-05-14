@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/((?!api/|assets/|favicon.png|favicon.svg|opengraph.jpg|robots.txt|sitemap.xml|site.webmanifest).*)",
+      "source": "/((?!api/|assets/|favicon.png|favicon.svg|opengraph.jpg|opengraph.png|opengraph-inkaa-icon-v2.png|robots.txt|sitemap.xml|site.webmanifest).*)",
       "destination": "/index.html"
     }
   ],
@@ -16,7 +16,7 @@
       ]
     },
     {
-      "source": "/(favicon.png|favicon.svg|opengraph.jpg|opengraph.png|site.webmanifest)",
+      "source": "/(favicon.png|favicon.svg|opengraph.jpg|opengraph.png|opengraph-inkaa-icon-v2.png|site.webmanifest)",
       "headers": [
         {
           "key": "Cache-Control",
