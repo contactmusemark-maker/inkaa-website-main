@@ -10,7 +10,7 @@ import {
   useReducedMotion,
   MotionValue,
 } from "framer-motion";
-import { ArrowRight, Menu, X, Star, ChevronRight, Search, Palette, Code2, Rocket, Bot, Wand2, Layers, Zap, PenTool, Image, Sun, Pen, Monitor, Plus, Minus, Phone, MessageCircle } from "lucide-react";
+import { ArrowRight, Menu, X, Star, ChevronRight, Search, Palette, Code2, Rocket, Bot, Wand2, Layers, Zap, PenTool, Image, Sun, Pen, Monitor, Plus, Minus, Phone, MessageCircle, CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 import { SiInstagram, SiX, SiFigma, SiFramer, SiGithub, SiOpenai, SiGsap } from "react-icons/si";
 import CustomCursor from "@/components/CustomCursor";
 import ServicesScrollScene from "@/components/ServicesScrollScene";
@@ -295,6 +295,8 @@ const formSchema = z.object({
   budget: z.string().min(1, "Please select a budget"),
   timeline: z.string().min(1, "Please select a timeline"),
   details: z.string().min(10, "Please provide project details"),
+  website: z.string().optional(),
+  startedAt: z.number().optional(),
 });
 
 /* ── Per-card parallax ── */
@@ -928,13 +930,51 @@ export default function Home() {
   const footerBgY = useTransform(footerBgProgress, [0, 1], ["-15%", "15%"]);
 
   /* ── Form ── */
+  const [submissionState, setSubmissionState] = React.useState<"idle" | "loading" | "success" | "error">("idle");
+  const [submissionError, setSubmissionError] = React.useState("");
+  const [referenceId, setReferenceId] = React.useState("");
+  const [submittedName, setSubmittedName] = React.useState("");
+  const formStartedAtRef = React.useRef(Date.now());
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      company: "",
+      service: "",
+      budget: "",
+      timeline: "",
+      details: "",
+      website: "",
+      startedAt: formStartedAtRef.current,
+    },
   });
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    const subject = `New Inquiry from ${data.fullName} - ${data.company || "Independent"}`;
-    const body = `Name: ${data.fullName}\nEmail: ${data.email}\nCompany: ${data.company || "N/A"}\nService: ${data.service}\nBudget: ${data.budget}\nTimeline: ${data.timeline}\n\nDetails:\n${data.details}`;
-    window.location.href = `mailto:mosesmartin@inkaastudio.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setSubmissionState("loading");
+    setSubmissionError("");
+
+    try {
+      const response = await fetch("/api/inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...data,
+          startedAt: formStartedAtRef.current,
+        }),
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(result.message || "Inquiry could not be sent.");
+      }
+
+      setReferenceId(result.referenceId || `INK-${Date.now().toString().slice(-8)}`);
+      setSubmittedName(data.fullName);
+      setSubmissionState("success");
+    } catch (error) {
+      setSubmissionError(error instanceof Error ? error.message : "Inquiry could not be sent. Please try again.");
+      setSubmissionState("error");
+    }
   };
 
   return (
@@ -2174,7 +2214,7 @@ export default function Home() {
                 <div>
                   <p className="text-[10px] uppercase tracking-widest font-semibold text-black/30 mb-0.5">Your Vision, My Craft</p>
                   <p className="text-black font-bold text-lg leading-none">Available 24/7</p>
-                  <a href="mailto:mosesmartin@inkaastudio.com" className="text-black/50 text-sm hover:text-[#d64238] transition-colors">mosesmartin@inkaastudio.com</a>
+                  <a href="#inquiry" className="text-black/50 text-sm hover:text-[#d64238] transition-colors">Send a studio inquiry</a>
                 </div>
               </motion.div>
             </div>
@@ -2468,70 +2508,158 @@ export default function Home() {
           <motion.div
             ref={formPanelRef}
             style={{ y: formY, opacity: formOpacity }}
-            className="bg-card p-8 md:p-12 rounded-[2rem] border border-border shadow-xl"
+            className="relative overflow-hidden bg-card p-8 md:p-12 rounded-[2rem] border border-border shadow-xl"
           >
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label htmlFor="fullName" className="text-sm font-semibold text-foreground">Full Name *</label>
-                  <input id="fullName" autoComplete="name" aria-invalid={Boolean(errors.fullName)} aria-describedby={errors.fullName ? "fullName-error" : undefined} {...register("fullName")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" placeholder="John Doe" />
-                  {errors.fullName && <span id="fullName-error" className="text-xs text-destructive">{errors.fullName.message as string}</span>}
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-semibold text-foreground">Email *</label>
-                  <input id="email" type="email" autoComplete="email" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "email-error" : undefined} {...register("email")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" placeholder="john@example.com" />
-                  {errors.email && <span id="email-error" className="text-xs text-destructive">{errors.email.message as string}</span>}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="company" className="text-sm font-semibold text-foreground">Company Name</label>
-                <input id="company" autoComplete="organization" {...register("company")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" placeholder="Acme Corp (Optional)" />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label htmlFor="service" className="text-sm font-semibold text-foreground">Service Needed *</label>
-                  <select id="service" aria-invalid={Boolean(errors.service)} aria-describedby={errors.service ? "service-error" : undefined} {...register("service")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none">
-                    <option value="">Select Service...</option>
-                    <option value="UI/UX Design">UI/UX Design</option>
-                    <option value="Website Design">Website Design</option>
-                    <option value="Branding">Branding & Identity</option>
-                    <option value="Motion Design">Motion & Visual Design</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  {errors.service && <span id="service-error" className="text-xs text-destructive">{errors.service.message as string}</span>}
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="budget" className="text-sm font-semibold text-foreground">Budget Range *</label>
-                  <select id="budget" aria-invalid={Boolean(errors.budget)} aria-describedby={errors.budget ? "budget-error" : undefined} {...register("budget")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none">
-                    <option value="">Select Budget...</option>
-                    <option value="< ₹50k">Under ₹50,000</option>
-                    <option value="₹50k - ₹1L">₹50,000 - ₹1,00,000</option>
-                    <option value="₹1L - ₹3L">₹1,00,000 - ₹3,00,000</option>
-                    <option value="₹3L+">₹3,00,000+</option>
-                  </select>
-                  {errors.budget && <span id="budget-error" className="text-xs text-destructive">{errors.budget.message as string}</span>}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="timeline" className="text-sm font-semibold text-foreground">Timeline *</label>
-                <select id="timeline" aria-invalid={Boolean(errors.timeline)} aria-describedby={errors.timeline ? "timeline-error" : undefined} {...register("timeline")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none">
-                  <option value="">Select Timeline...</option>
-                  <option value="ASAP">ASAP (Rush)</option>
-                  <option value="1-2 Months">1-2 Months</option>
-                  <option value="3+ Months">3+ Months</option>
-                  <option value="Flexible">Flexible</option>
-                </select>
-                {errors.timeline && <span id="timeline-error" className="text-xs text-destructive">{errors.timeline.message as string}</span>}
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="details" className="text-sm font-semibold text-foreground">Project Details *</label>
-                <textarea id="details" aria-invalid={Boolean(errors.details)} aria-describedby={errors.details ? "details-error" : undefined} {...register("details")} rows={4} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none" placeholder="Tell me about your project, goals, and expectations..." />
-                {errors.details && <span id="details-error" className="text-xs text-destructive">{errors.details.message as string}</span>}
-              </div>
-              <Button type="submit" size="lg" className="w-full rounded-xl h-14 text-base font-semibold bg-foreground text-background hover:bg-primary hover:text-white transition-colors duration-300">
-                Send Inquiry
-              </Button>
-            </form>
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(214,66,56,0.08),transparent_34%)]" />
+            <AnimatePresence mode="wait">
+              {submissionState === "success" ? (
+                <motion.div
+                  key="inquiry-success"
+                  initial={{ opacity: 0, y: 22, filter: "blur(10px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -16, filter: "blur(8px)" }}
+                  transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative min-h-[540px] overflow-hidden rounded-[1.5rem] border border-white/[0.08] bg-[#060606] p-8 text-white md:p-10"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_12%,rgba(214,66,56,0.22),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.045),transparent)]" />
+                  <motion.div
+                    aria-hidden="true"
+                    className="absolute left-1/2 top-14 h-28 w-28 -translate-x-1/2 rounded-full bg-primary/15 blur-3xl"
+                    animate={shouldReduce ? {} : { scale: [0.95, 1.08, 0.95], opacity: [0.32, 0.54, 0.32] }}
+                    transition={{ duration: 5.6, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  <div className="relative z-10 flex min-h-[480px] flex-col items-center justify-center text-center">
+                    <motion.div
+                      className="mb-8 grid h-20 w-20 place-items-center rounded-full border border-primary/35 bg-primary/10 text-primary shadow-[0_0_60px_rgba(214,66,56,0.22)]"
+                      initial={{ scale: 0.72, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <CheckCircle2 className="h-9 w-9" />
+                    </motion.div>
+                    <p className="mb-4 font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-primary">Inkaa Receipt</p>
+                    <h4 className="text-4xl font-black leading-none tracking-tighter md:text-5xl">Inquiry Received</h4>
+                    <p className="mt-6 max-w-md text-sm font-light leading-relaxed text-white/58">
+                      {submittedName ? `${submittedName}, your vision has been received by Inkaa Studio.` : "Your vision has been received by Inkaa Studio."} We’ll review your inquiry and get back within 24–48 hours.
+                    </p>
+                    <div className="mt-8 w-full max-w-sm rounded-2xl border border-white/[0.08] bg-white/[0.055] p-5 text-left backdrop-blur-xl">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-white/32">Confirmation ID</p>
+                      <p className="mt-2 font-mono text-xl font-bold tracking-wider text-white">{referenceId}</p>
+                      <div className="my-5 h-px bg-white/[0.08]" />
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-white/38">Response window</span>
+                        <span className="font-semibold text-white/80">24–48 hours</span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSubmissionState("idle");
+                        setReferenceId("");
+                        setSubmittedName("");
+                        formStartedAtRef.current = Date.now();
+                      }}
+                      className="mt-8 rounded-full border border-white/[0.12] px-5 py-2.5 text-sm font-semibold text-white/70 transition-colors hover:border-primary/40 hover:text-white"
+                    >
+                      Send another inquiry
+                    </button>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.form
+                  key="inquiry-form"
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="relative space-y-6"
+                  noValidate
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -16, filter: "blur(8px)" }}
+                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <input type="text" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" {...register("website")} />
+                  <input type="hidden" {...register("startedAt", { valueAsNumber: true })} value={formStartedAtRef.current} />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label htmlFor="fullName" className="text-sm font-semibold text-foreground">Full Name *</label>
+                      <input id="fullName" autoComplete="name" aria-invalid={Boolean(errors.fullName)} aria-describedby={errors.fullName ? "fullName-error" : undefined} {...register("fullName")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" placeholder="John Doe" />
+                      {errors.fullName && <span id="fullName-error" className="text-xs text-destructive">{errors.fullName.message as string}</span>}
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="text-sm font-semibold text-foreground">Email *</label>
+                      <input id="email" type="email" autoComplete="email" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "email-error" : undefined} {...register("email")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" placeholder="john@example.com" />
+                      {errors.email && <span id="email-error" className="text-xs text-destructive">{errors.email.message as string}</span>}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="company" className="text-sm font-semibold text-foreground">Company Name</label>
+                    <input id="company" autoComplete="organization" {...register("company")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" placeholder="Acme Corp (Optional)" />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label htmlFor="service" className="text-sm font-semibold text-foreground">Service Needed *</label>
+                      <select id="service" aria-invalid={Boolean(errors.service)} aria-describedby={errors.service ? "service-error" : undefined} {...register("service")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none">
+                        <option value="">Select Service...</option>
+                        <option value="UI/UX Design">UI/UX Design</option>
+                        <option value="Website Design">Website Design</option>
+                        <option value="Branding">Branding & Identity</option>
+                        <option value="Motion Design">Motion & Visual Design</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      {errors.service && <span id="service-error" className="text-xs text-destructive">{errors.service.message as string}</span>}
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="budget" className="text-sm font-semibold text-foreground">Budget Range *</label>
+                      <select id="budget" aria-invalid={Boolean(errors.budget)} aria-describedby={errors.budget ? "budget-error" : undefined} {...register("budget")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none">
+                        <option value="">Select Budget...</option>
+                        <option value="< ₹50k">Under ₹50,000</option>
+                        <option value="₹50k - ₹1L">₹50,000 - ₹1,00,000</option>
+                        <option value="₹1L - ₹3L">₹1,00,000 - ₹3,00,000</option>
+                        <option value="₹3L+">₹3,00,000+</option>
+                      </select>
+                      {errors.budget && <span id="budget-error" className="text-xs text-destructive">{errors.budget.message as string}</span>}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="timeline" className="text-sm font-semibold text-foreground">Timeline *</label>
+                    <select id="timeline" aria-invalid={Boolean(errors.timeline)} aria-describedby={errors.timeline ? "timeline-error" : undefined} {...register("timeline")} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none">
+                      <option value="">Select Timeline...</option>
+                      <option value="ASAP">ASAP (Rush)</option>
+                      <option value="1-2 Months">1-2 Months</option>
+                      <option value="3+ Months">3+ Months</option>
+                      <option value="Flexible">Flexible</option>
+                    </select>
+                    {errors.timeline && <span id="timeline-error" className="text-xs text-destructive">{errors.timeline.message as string}</span>}
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="details" className="text-sm font-semibold text-foreground">Project Details *</label>
+                    <textarea id="details" aria-invalid={Boolean(errors.details)} aria-describedby={errors.details ? "details-error" : undefined} {...register("details")} rows={4} className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none" placeholder="Tell me about your project, goals, and expectations..." />
+                    {errors.details && <span id="details-error" className="text-xs text-destructive">{errors.details.message as string}</span>}
+                  </div>
+                  {submissionState === "error" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-start gap-3 rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+                      role="alert"
+                    >
+                      <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                      <span>{submissionError}</span>
+                    </motion.div>
+                  )}
+                  <Button type="submit" size="lg" disabled={submissionState === "loading"} className="w-full rounded-xl h-14 text-base font-semibold bg-foreground text-background hover:bg-primary hover:text-white transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-70">
+                    {submissionState === "loading" ? (
+                      <span className="inline-flex items-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" /> Sending Inquiry
+                      </span>
+                    ) : (
+                      "Send Inquiry"
+                    )}
+                  </Button>
+                </motion.form>
+              )}
+            </AnimatePresence>
           </motion.div>
         </div>
       </motion.section>
@@ -2600,7 +2728,7 @@ export default function Home() {
             >
               <h4 className="font-bold mb-6 uppercase tracking-widest text-xs text-background/40">Connect</h4>
               <ul className="flex flex-col gap-4">
-                <li><a href="mailto:mosesmartin@inkaastudio.com" className="hover:text-primary transition-colors">Email</a></li>
+                <li><a href="#inquiry" className="hover:text-primary transition-colors">Inquiry</a></li>
                 <li><a href="https://heyimartin.framer.ai/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Portfolio</a></li>
                 <li><a href="https://buymeaprashant.com/inkaastudio" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Support</a></li>
               </ul>
