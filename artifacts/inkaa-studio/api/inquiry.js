@@ -163,26 +163,32 @@ export default async function handler(req, res) {
   const toEmail = process.env.INQUIRY_TO_EMAIL || "mosesmartin@inkaastudio.com";
   const fromEmail = process.env.RESEND_FROM_EMAIL || "Inkaa Studio <onboarding@resend.dev>";
   const replyToEmail = process.env.INQUIRY_REPLY_TO_EMAIL || toEmail;
+  const shouldSendUserConfirmation = process.env.SEND_USER_CONFIRMATION !== "false";
 
   try {
-    await Promise.all([
-      sendResendEmail({
-        from: fromEmail,
-        to: [toEmail],
-        reply_to: data.email,
-        subject: `New Inkaa inquiry: ${data.fullName} · ${data.service}`,
-        html: inquiryEmailHtml(data, referenceId),
-        text: `New inquiry ${referenceId}\n\nName: ${data.fullName}\nEmail: ${data.email}\nCompany: ${data.company || "N/A"}\nService: ${data.service}\nBudget: ${data.budget}\nTimeline: ${data.timeline}\n\n${data.details}`,
-      }),
-      sendResendEmail({
-        from: fromEmail,
-        to: [data.email],
-        reply_to: replyToEmail,
-        subject: `Inquiry received · ${referenceId}`,
-        html: confirmationEmailHtml(data, referenceId),
-        text: `Inquiry Received\n\nYour vision has been received by Inkaa Studio. We'll review your inquiry and get back within 24-48 hours.\n\nReference: ${referenceId}\nService: ${data.service}\nTimeline: ${data.timeline}\nBudget: ${data.budget}`,
-      }),
-    ]);
+    await sendResendEmail({
+      from: fromEmail,
+      to: [toEmail],
+      reply_to: data.email,
+      subject: `New Inkaa inquiry: ${data.fullName} · ${data.service}`,
+      html: inquiryEmailHtml(data, referenceId),
+      text: `New inquiry ${referenceId}\n\nName: ${data.fullName}\nEmail: ${data.email}\nCompany: ${data.company || "N/A"}\nService: ${data.service}\nBudget: ${data.budget}\nTimeline: ${data.timeline}\n\n${data.details}`,
+    });
+
+    if (shouldSendUserConfirmation) {
+      try {
+        await sendResendEmail({
+          from: fromEmail,
+          to: [data.email],
+          reply_to: replyToEmail,
+          subject: `Inquiry received · ${referenceId}`,
+          html: confirmationEmailHtml(data, referenceId),
+          text: `Inquiry Received\n\nYour vision has been received by Inkaa Studio. We'll review your inquiry and get back within 24-48 hours.\n\nReference: ${referenceId}\nService: ${data.service}\nTimeline: ${data.timeline}\nBudget: ${data.budget}`,
+        });
+      } catch (confirmationError) {
+        console.warn("User confirmation email failed", confirmationError);
+      }
+    }
 
     return res.status(200).json({ referenceId });
   } catch (error) {
