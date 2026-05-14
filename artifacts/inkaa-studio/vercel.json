@@ -16,7 +16,7 @@
       ]
     },
     {
-      "source": "/(favicon.png|favicon.svg|opengraph.jpg|site.webmanifest)",
+      "source": "/(favicon.png|favicon.svg|opengraph.jpg|opengraph.png|site.webmanifest)",
       "headers": [
         {
           "key": "Cache-Control",
